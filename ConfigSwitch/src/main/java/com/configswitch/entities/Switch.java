@@ -5,7 +5,14 @@ import java.io.Serializable;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+import org.springframework.context.annotation.Bean;
+
+
 public class Switch implements Serializable {
+	
 	
 	private String nameSwitch ;
 	private InetAddress adressSwitch;
