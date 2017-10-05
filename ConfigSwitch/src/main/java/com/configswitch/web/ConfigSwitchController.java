@@ -3,6 +3,9 @@ package com.configswitch.web;
 
 import java.net.InetAddress;
 
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +15,7 @@ import com.configswitch.entities.Switch;
 import com.configswitch.metier.IConfigSwitchMetier;
 
 @Controller
-public class ConfigSwitchController {
+public class ConfigSwitchController{
 	
 	@Autowired
 	private IConfigSwitchMetier configSwitchMetier ;

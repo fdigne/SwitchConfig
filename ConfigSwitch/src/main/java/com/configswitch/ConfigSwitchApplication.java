@@ -4,12 +4,15 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ConfigSwitchApplication implements CommandLineRunner {
+public class ConfigSwitchApplication implements CommandLineRunner{
 	
 	public static void main(String[] args)  {
 		SpringApplication.run(ConfigSwitchApplication.class, args);
@@ -33,7 +36,7 @@ public class ConfigSwitchApplication implements CommandLineRunner {
 	public void run(String... arg0) throws Exception {
 		
 		
-		openUrlInBrowser("http://localhost:8880/index");
+		//openUrlInBrowser("http://localhost:8880/index");
 		 
 	}
 	
