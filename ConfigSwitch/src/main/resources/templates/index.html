@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="template1">
+<head>
+<meta charset="UTF-8"/>
+<title>Config'Switch</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="col-md-6">
+			<div class="panel panel-primary">
+				<div class="panel-heading">Choix de l'utilisateur</div>
+				<div class="panel-body">
+				<form th:action="@{/consulterSwitch}" method="get">
+				<div>
+					<label>Adresse Switch : </label>
+					<input type="text" name="adresseSwitch" th:value="${adresseSwitch}"/>
+					<button type="submit" class="btn btn-primary">Ok</button>
+				</div>
+				</form>
+				
+		</div>
+		</div>
+		</div>
+		</div>
+</body>
+</html>
+
