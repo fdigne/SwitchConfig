@@ -4,15 +4,13 @@ package com.configswitch.web;
 import java.net.InetAddress;
 import java.util.Collection;
 
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.configswitch.entities.Interface;
+import com.configswitch.entities.InterfaceSwitch;
 import com.configswitch.entities.Switch;
 import com.configswitch.metier.IConfigSwitchMetier;
 
@@ -39,7 +37,7 @@ public class ConfigSwitchController{
 				
 				Switch switche = configSwitchMetier.getSwitchInformations(InetAddress.getByName(adresseSwitch));
 				model.addAttribute("switche", switche);
-				Collection<Interface> listInterfaces = configSwitchMetier.getListInterfaces(InetAddress.getByName(adresseSwitch));
+				Collection<InterfaceSwitch> listInterfaces = configSwitchMetier.getListInterfaces(InetAddress.getByName(adresseSwitch));
 				model.addAttribute("listInterfaces", listInterfaces);
 			}
 			

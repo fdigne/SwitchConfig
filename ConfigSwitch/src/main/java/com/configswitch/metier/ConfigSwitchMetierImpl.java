@@ -8,7 +8,7 @@ import java.util.Collection;
 import org.snmp4j.smi.OID;
 import org.springframework.stereotype.Service;
 
-import com.configswitch.entities.Interface;
+import com.configswitch.entities.InterfaceSwitch;
 import com.configswitch.entities.Switch;
 import com.configswitch.snmp.SNMPManager;
 
@@ -36,10 +36,10 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 
 
 	@Override
-	public Collection<Interface> getListInterfaces(InetAddress adresseSwitch) {
+	public Collection<InterfaceSwitch> getListInterfaces(InetAddress adresseSwitch) {
 
 		SNMPManager client = new SNMPManager("udp:"+adresseSwitch.toString()+"/161");
-		ArrayList<Interface> liste = new ArrayList<Interface>();
+		ArrayList<InterfaceSwitch> liste = new ArrayList<InterfaceSwitch>();
 
 		try {
 			client.start(); 
@@ -47,12 +47,12 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 			System.out.println(ifNumber);
 
 			for (int i=0 ; i<= ifNumber ; i++) {
-				liste.add(new Interface(client.getAsString(new OID(IFNAME+i))));
+				liste.add(new InterfaceSwitch(client.getAsString(new OID(IFNAME+i))));
 
 			}
 
 			int compteur = 0;
-			for (Interface i : liste) {
+			for (InterfaceSwitch i : liste) {
 				if(compteur <= liste.size()/2) {
 					i.setTypeInterface("Eclairage");
 					compteur ++;

@@ -14,7 +14,7 @@ public class Switch implements Serializable {
 	
 	private String nameSwitch ;
 	private InetAddress adressSwitch;
-	private Collection<Interface> listInterfaces ;
+	private Collection<InterfaceSwitch> listInterfaces ;
 	private File configSwitch;
 	
 	
@@ -60,12 +60,12 @@ public class Switch implements Serializable {
 	}
 
 
-	public Collection<Interface> getListInterfaces() {
+	public Collection<InterfaceSwitch> getListInterfaces() {
 		return listInterfaces;
 	}
 
 
-	public void setListInterfaces(Collection<Interface> listInterfaces) {
+	public void setListInterfaces(Collection<InterfaceSwitch> listInterfaces) {
 		this.listInterfaces = listInterfaces;
 	}
 	

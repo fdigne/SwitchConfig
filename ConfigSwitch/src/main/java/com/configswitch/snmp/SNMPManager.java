@@ -16,8 +16,6 @@ import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
-import org.snmp4j.util.PDUFactory;
-import org.snmp4j.util.TableUtils;
 
 public class SNMPManager implements Runnable {
 

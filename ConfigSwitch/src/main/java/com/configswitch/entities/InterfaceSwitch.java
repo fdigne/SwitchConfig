@@ -2,18 +2,18 @@ package com.configswitch.entities;
 
 import java.io.Serializable;
 
-public class Interface implements Serializable {
+public class InterfaceSwitch implements Serializable {
 	
 	private String nomInterface ;
 	private String typeInterface ;
 	
 	
-	public Interface() {
+	public InterfaceSwitch() {
 		super();
 	}
 
 
-	public Interface(String nomInterface) {
+	public InterfaceSwitch(String nomInterface) {
 		super();
 		this.nomInterface = nomInterface;
 	}
