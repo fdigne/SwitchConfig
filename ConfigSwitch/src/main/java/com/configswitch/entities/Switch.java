@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.util.Collection;
 
 import org.springframework.context.annotation.Bean;
 
@@ -13,6 +14,7 @@ public class Switch implements Serializable {
 	
 	private String nameSwitch ;
 	private InetAddress adressSwitch;
+	private Collection<Interface> listInterfaces ;
 	private File configSwitch;
 	
 	
@@ -55,6 +57,16 @@ public class Switch implements Serializable {
 
 	public void setConfigSwitch(File configSwitch) {
 		this.configSwitch = configSwitch;
+	}
+
+
+	public Collection<Interface> getListInterfaces() {
+		return listInterfaces;
+	}
+
+
+	public void setListInterfaces(Collection<Interface> listInterfaces) {
+		this.listInterfaces = listInterfaces;
 	}
 	
 	
