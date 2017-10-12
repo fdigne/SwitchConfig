@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.snmp4j.smi.OID;
+import org.snmp4j.smi.VariableBinding;
+import org.snmp4j.util.TableEvent;
 import org.springframework.stereotype.Service;
 
 import com.configswitch.entities.InterfaceSwitch;
@@ -19,6 +22,7 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 
 	public static final String IFNAME = ".1.3.6.1.2.1.2.2.1.2.";
 	public static final String IFNUMBER = ".1.3.6.1.2.1.2.1.0";
+	private static final String IFDESCR = ".1.3.6.1.2.1.2.2.1.2";
 
 	@Override
 	public Switch getSwitchInformations(InetAddress adresseSwitch) {
@@ -42,28 +46,17 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 		ArrayList<InterfaceSwitch> liste = new ArrayList<InterfaceSwitch>();
 
 		try {
-			client.start(); 
-			int ifNumber = Integer.parseInt(client.getAsString(new OID(IFNUMBER)));
-			System.out.println(ifNumber);
+			client.start();
+			List<TableEvent> tableViewSnmp = client.getListInterfaces(new OID(IFDESCR));
 
-			for (int i=0 ; i<= ifNumber ; i++) {
-				liste.add(new InterfaceSwitch(client.getAsString(new OID(IFNAME+i))));
+			for (TableEvent te : tableViewSnmp) {				
+				for(VariableBinding vb : te.getColumns()) {
+					String nomInterface = vb.getVariable().toString();
+					liste.add(new InterfaceSwitch(nomInterface));
+				}
 
 			}
-
-			int compteur = 0;
-			for (InterfaceSwitch i : liste) {
-				if(compteur <= liste.size()/2) {
-					i.setTypeInterface("Eclairage");
-					compteur ++;
-				}
-				else {
-					i.setTypeInterface("Video");
-					compteur ++ ;
-				}
-			}
-		}
-		catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

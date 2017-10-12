@@ -2,6 +2,8 @@ package com.configswitch.snmp;
 
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.util.List;
 
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.PDU;
@@ -14,8 +16,13 @@ import org.snmp4j.smi.Address;
 import org.snmp4j.smi.GenericAddress;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
+import org.snmp4j.smi.Variable;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
+import org.snmp4j.util.DefaultPDUFactory;
+import org.snmp4j.util.PDUFactory;
+import org.snmp4j.util.TableEvent;
+import org.snmp4j.util.TableUtils;
 
 public class SNMPManager implements Runnable {
 
@@ -29,7 +36,6 @@ public class SNMPManager implements Runnable {
 	public SNMPManager(String add)
 	{
 	address = add;
-	//System.out.println(address);
 	}
 
 	
@@ -40,9 +46,12 @@ public class SNMPManager implements Runnable {
 	* @throws IOException
 	*/
 	public void start() throws IOException {
+		
+	
 	TransportMapping transport = new DefaultUdpTransportMapping();
 	snmp = new Snmp(transport);
 	transport.listen();
+	snmp.listen();
 	}
 
 	/**
@@ -101,6 +110,22 @@ public class SNMPManager implements Runnable {
 	target.setTimeout(150);
 	target.setVersion(SnmpConstants.version2c);
 	return target;
+	}
+	
+	public List<TableEvent> getListInterfaces(OID query) throws Exception {
+		
+		PDUFactory pduFactory = new DefaultPDUFactory(PDU.GETBULK);
+		TableUtils tableUtils = new TableUtils(snmp, pduFactory);
+		List<TableEvent> test = tableUtils.getTable(getTarget(), new OID[]{ query },null,null);
+		for(TableEvent tabevent : test) {
+			VariableBinding[] vb = tabevent.getColumns();
+			for(VariableBinding v : vb) {
+				System.out.println(v.getVariable().toString());
+			}
+		}
+		
+	//return tableUtils.getTable(getTarget(), new OID[]{ query },null,null);
+		return test;
 	}
 
 
