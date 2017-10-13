@@ -41,8 +41,10 @@
 				<div class="panel-body">
 					<form th:action="@{/configurerSwitch}" id="configurerSwitch"
 						method="post">
-						<input type="hidden" name="nomClient"
-							th:value="${switche.nameSwitch}" />
+						<input type="hidden" name="adresseSwitch"
+							th:value="${adresseSwitch}" />
+						<input type="hidden" name="switche"
+							th:value="${switche}" />
 						<table class="table table-striped">
 							<tr>
 								<th>Interfaces</th>
@@ -51,7 +53,7 @@
 							</tr>
 							<tr th:each="o:${listInterfaces}">
 								<td th:text="${o.nomInterface}"></td>
-								<td><select name="selectJeu">
+								<td><select name="selectTypeInterface">
 										<option th:value="${o.typeInterface}" th:text="Eclairage"
 											th:selected="(${o.typeInterface} == 'Eclairage')" />
 										<option th:value="${o.typeInterface}" th:text="Son"
