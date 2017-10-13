@@ -26,6 +26,8 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 	private static final String IFDESCR = ".1.3.6.1.2.1.2.2.1.2";
 	private static final String IFTYPE = ".1.3.6.1.2.1.2.2.1.3.";
 
+	private static final String IFSTATUS = ".1.3.6.1.2.1.2.2.1.8.";
+
 	@Override
 	public Switch getSwitchInformations(InetAddress adresseSwitch) {
 
@@ -54,9 +56,11 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 				for(VariableBinding vb : te.getColumns()) {
 					String nomInterface = vb.getVariable().toString();
 					String typeInterface = getTypeInterface(client.getAsString(new OID(IFTYPE+te.getIndex())));
+					boolean statusInterface = getStatusInterface(client.getAsString(new OID(IFSTATUS+te.getIndex())));
 
 					InterfaceSwitch interfaceSwitch = new InterfaceSwitch(nomInterface);
 					interfaceSwitch.setTypeInterface(typeInterface);
+					interfaceSwitch.setStatusInterface(statusInterface);
 					liste.add(interfaceSwitch);
 				}
 
@@ -68,6 +72,17 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 
 		return liste;
 
+	}
+
+	private boolean getStatusInterface(String statusInterfaceSnmp) {
+			boolean statusInterface ;
+			if (statusInterfaceSnmp.equals("1")) {
+				statusInterface = true ;
+			}
+			else {
+				statusInterface = false ;
+			}
+		return statusInterface;
 	}
 
 	private String getTypeInterface(String typeInterfaceSnmp) {

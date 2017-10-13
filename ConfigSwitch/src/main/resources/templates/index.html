@@ -47,6 +47,7 @@
 							<tr>
 								<th>Interfaces</th>
 								<th>Type</th>
+								<th>Status</th>
 							</tr>
 							<tr th:each="o:${listInterfaces}">
 								<td th:text="${o.nomInterface}"></td>
@@ -58,6 +59,12 @@
 										<option th:value="${o.typeInterface}" th:text="Vidéo"
 											th:selected="(${o.typeInterface} == 'Video')" />
 								</select></td>
+								<td>
+								<label th:if="${o.statusInterface}" th:text="Up" class="text-success"></label>
+								<label th:if="!${o.statusInterface}" th:text="Down" class="text-danger"></label>
+								</td>
+								
+								
 							</tr>
 						</table>
 						<button type="submit" class="btn btn-primary">Modifier la

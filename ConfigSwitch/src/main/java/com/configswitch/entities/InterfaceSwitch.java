@@ -6,6 +6,7 @@ public class InterfaceSwitch implements Serializable {
 	
 	private String nomInterface ;
 	private String typeInterface ;
+	private boolean statusInterface;
 	
 	
 	public InterfaceSwitch() {
@@ -36,6 +37,16 @@ public class InterfaceSwitch implements Serializable {
 
 	public void setTypeInterface(String typeInterface) {
 		this.typeInterface = typeInterface;
+	}
+
+
+	public boolean getStatusInterface() {
+		return statusInterface;
+	}
+
+
+	public void setStatusInterface(boolean statusInterface) {
+		this.statusInterface = statusInterface;
 	}
 	
 	

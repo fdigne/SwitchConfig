@@ -2,6 +2,7 @@ package com.configswitch.web;
 
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Collection;
 
 
@@ -16,15 +17,16 @@ import com.configswitch.metier.IConfigSwitchMetier;
 
 @Controller
 public class ConfigSwitchController{
-	
+
 	@Autowired
 	private IConfigSwitchMetier configSwitchMetier ;
 
 	@RequestMapping("/index")
-	public String index() {
+	public String index() throws UnknownHostException {
+
 		return "index";
 	}
-	
+
 	@RequestMapping("/consulterSwitch")
 	public String consulterSwitch(Model model, String adresseSwitch) {
 		model.addAttribute("adresseSwitch", adresseSwitch);
@@ -34,20 +36,20 @@ public class ConfigSwitchController{
 				throw new RuntimeException("Switch injoignable") ;
 			}
 			else {
-				
+
 				Switch switche = configSwitchMetier.getSwitchInformations(InetAddress.getByName(adresseSwitch));
 				model.addAttribute("switche", switche);
 				Collection<InterfaceSwitch> listInterfaces = configSwitchMetier.getListInterfaces(InetAddress.getByName(adresseSwitch));
 				model.addAttribute("listInterfaces", listInterfaces);
 			}
-			
-			
+
+
 		} catch (Exception e) {
-			
+
 			model.addAttribute("exception",e);
 		}
 		return "index";
-		
+
 	}
 
 }
