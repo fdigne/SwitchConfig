@@ -15,7 +15,7 @@
 					<form th:action="@{/consulterSwitch}" method="get">
 						<div>
 							<label>Adresse Switch : </label> <input type="text"
-								name="adresseSwitch" th:value="${adresseSwitch}" />
+								name="adresseSwitch" th:value="${adresseSwitch}" placeholder="172.31.10.1"/>
 							<button type="submit" class="btn btn-primary">Ok</button>
 						</div>
 					</form>
@@ -54,12 +54,14 @@
 							<tr th:each="o:${listInterfaces}">
 								<td th:text="${o.nomInterface}"></td>
 								<td><select name="selectTypeInterface">
-										<option th:value="${o.typeInterface}" th:text="Eclairage"
+										<option th:value="Eclairage" th:text="Eclairage"
 											th:selected="(${o.typeInterface} == 'Eclairage')" />
-										<option th:value="${o.typeInterface}" th:text="Son"
+										<option th:value="Son" th:text="Son"
 											th:selected="(${o.typeInterface} == 'Son')" />
-										<option th:value="${o.typeInterface}" th:text="Vidéo"
+										<option th:value="Vidéo" th:text="Vidéo"
 											th:selected="(${o.typeInterface} == 'Video')" />
+		
+											
 								</select></td>
 								<td>
 								<label th:if="${o.statusInterface}" th:text="Up" class="text-success"></label>
@@ -69,6 +71,7 @@
 								
 							</tr>
 						</table>
+						
 						<button type="submit" class="btn btn-primary">Modifier la
 							configuration</button>
 						<div class="text-danger" th:if="${error}"
@@ -81,4 +84,3 @@
 	</div>
 </body>
 </html>
-

@@ -80,8 +80,10 @@ public class ConfigSwitchController{
 
 	@RequestMapping(value="/configurerSwitch", method=RequestMethod.POST)
 	public String configurerSwitch(Model model, String adresseSwitch, 
-									@RequestParam("selectTypeInterface") String typeInterface)  {
-		System.out.println(typeInterface);
+									@RequestParam("selectTypeInterface") String[] typeInterface)  {
+		for (String s : typeInterface) {
+			System.out.println(s);
+		}
 		return "redirect:/consulterSwitch?adresseSwitch="+adresseSwitch;
 	}
 
