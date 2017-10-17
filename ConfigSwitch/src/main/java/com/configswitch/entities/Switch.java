@@ -16,6 +16,7 @@ public class Switch implements Serializable {
 	private InetAddress adressSwitch;
 	private Collection<InterfaceSwitch> listInterfaces ;
 	private File configSwitch;
+	private String adressSwitchString ;
 	
 	
 	public Switch() {
@@ -27,6 +28,13 @@ public class Switch implements Serializable {
 		super();
 		this.nameSwitch = nameSwitch;
 		this.adressSwitch = adresse;
+	}
+
+
+	public Switch(String nameSwitch, String adressSwitchString) {
+		super();
+		this.nameSwitch = nameSwitch;
+		this.adressSwitchString = adressSwitchString;
 	}
 
 
@@ -67,6 +75,16 @@ public class Switch implements Serializable {
 
 	public void setListInterfaces(Collection<InterfaceSwitch> listInterfaces) {
 		this.listInterfaces = listInterfaces;
+	}
+
+
+	public String getAdressSwitchString() {
+		return adressSwitchString;
+	}
+
+
+	public void setAdressSwitchString(String adressSwitchString) {
+		this.adressSwitchString = adressSwitchString;
 	}
 	
 	

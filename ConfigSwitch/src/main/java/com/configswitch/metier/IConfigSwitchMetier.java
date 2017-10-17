@@ -12,5 +12,6 @@ public interface IConfigSwitchMetier {
 	public boolean isReachable(InetAddress adresseSwitch) throws IOException;
 	public Switch getSwitchInformations(InetAddress adresseSwitch);
 	public Collection<InterfaceSwitch> getListInterfaces(InetAddress adresseSwitch) ;
+	public Collection<Switch> getListSwitch();
 
 }

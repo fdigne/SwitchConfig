@@ -55,6 +55,9 @@ public class ConfigSwitchController{
 				model.addAttribute("switche", switche);
 				Collection<InterfaceSwitch> listInterfaces = configSwitchMetier.getListInterfaces(InetAddress.getByName(adresseSwitch));
 				model.addAttribute("listInterfaces", listInterfaces);
+				
+				Collection<Switch> listeSwitch = configSwitchMetier.getListSwitch();
+				model.addAttribute("listeSwitch", listeSwitch);
 			}
 
 
@@ -82,7 +85,7 @@ public class ConfigSwitchController{
 	public String configurerSwitch(Model model, String adresseSwitch, 
 									@RequestParam("selectTypeInterface") String[] typeInterface)  {
 		for (String s : typeInterface) {
-			System.out.println(s);
+			
 		}
 		return "redirect:/consulterSwitch?adresseSwitch="+adresseSwitch;
 	}

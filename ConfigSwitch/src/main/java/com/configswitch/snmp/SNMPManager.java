@@ -121,7 +121,7 @@ public class SNMPManager implements Runnable {
 
 		return tableUtils.getTable(getTarget(), new OID[]{ query },null,null);
 	}
-
+	
 
 	@Override
 	public void run() {
