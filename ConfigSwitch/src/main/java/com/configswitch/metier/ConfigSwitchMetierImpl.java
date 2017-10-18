@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.snmp4j.event.ResponseEvent;
+import org.snmp4j.smi.Integer32;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.util.TableEvent;
@@ -26,9 +27,10 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 	public static final String IFNAME = ".1.3.6.1.2.1.2.2.1.2.";
 	public static final String IFNUMBER = ".1.3.6.1.2.1.2.1.0";
 	private static final String IFDESCR = ".1.3.6.1.2.1.2.2.1.2";
-	private static final String IFTYPE = ".1.3.6.1.2.1.2.2.1.3.";
 	private static final String IFSTATUS = ".1.3.6.1.2.1.2.2.1.8.";
 	private static final String VLANID = ".1.3.6.1.4.1.9.9.68.1.2.2.1.2.";
+	private static final String IFINDEX = ".1.3.6.1.2.1.2.2.1.1.";
+
 
 	@Override
 	public Switch getSwitchInformations(InetAddress adresseSwitch) {
@@ -66,13 +68,15 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 				for(VariableBinding vb : te.getColumns()) {
 					String nomInterface = vb.getVariable().toString();
 					String typeInterface = getTypeInterface(client.getAsString(new OID(VLANID+te.getIndex())));
-					System.out.println(typeInterface);
 					boolean statusInterface = getStatusInterface(client.getAsString(new OID(IFSTATUS+te.getIndex())));
+					String ifIndex = client.getAsString(new OID(IFINDEX+te.getIndex()));
+					
 					
 					if(nomInterface.contains("Ethernet")) {
 						InterfaceSwitch interfaceSwitch = new InterfaceSwitch(nomInterface);
 						interfaceSwitch.setTypeInterface(typeInterface);
 						interfaceSwitch.setStatusInterface(statusInterface);
+						interfaceSwitch.setIfIndex(Integer.parseInt(ifIndex));
 						liste.add(interfaceSwitch);
 					}
 					
@@ -117,6 +121,25 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 
 		return typeInterface ;
 	}
+	
+	@Override
+	public int getVlanId(String typeInterface) {
+		int vlanId;
+		if(typeInterface.equals("Eclairage")) {
+			vlanId = 10;
+		}
+		else if(typeInterface.equals("Son")) {
+			vlanId = 20;
+		}
+		else if(typeInterface.equals("Video")) {
+			vlanId = 30;
+		}
+		else {
+			vlanId=1;
+		}
+		
+		return vlanId;
+	}
 
 	@Override
 	public Collection<Switch> getListSwitch() {
@@ -126,8 +149,8 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 			try {
 				byte[] localAdress = InetAddress.getLocalHost().getAddress();
 				
-				
-				for (int i = 1 ; i<255 ; i++) {
+				// ATTENTION : A MODIFIER LA BOUCLE (METTRE i=1 EN CONDITION REELLE)
+				for (int i = 2 ; i<255 ; i++) {
 					//localAdress[3] = (byte) i ;
 					adresseTestee = InetAddress.getByName("172.31.10."+i);
 					try {
@@ -142,5 +165,18 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 				e.printStackTrace();
 			}
 		return listeSwitch;
+	}
+
+	@Override
+	public void setVlanConfiguration(String adresseSwitch, int index, int vlanValue ) {
+		SNMPManager client = new SNMPManager("udp:"+adresseSwitch.toString()+"/161");
+		try {
+			client.start();
+			client.set(new OID(VLANID+index), new Integer32(vlanValue));
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

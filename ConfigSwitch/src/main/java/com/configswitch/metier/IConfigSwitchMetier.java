@@ -13,5 +13,7 @@ public interface IConfigSwitchMetier {
 	public Switch getSwitchInformations(InetAddress adresseSwitch);
 	public Collection<InterfaceSwitch> getListInterfaces(InetAddress adresseSwitch) ;
 	public Collection<Switch> getListSwitch();
+	public int getVlanId(String typeInterface);
+	void setVlanConfiguration(String adresseSwitch, int index, int vlanValue);
 
 }

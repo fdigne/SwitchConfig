@@ -32,8 +32,10 @@ public class ConfigSwitchController{
 	
 
 	@RequestMapping("/index")
-	public String index() throws UnknownHostException {
-
+	public String index(Model model) throws UnknownHostException {
+		Collection<Switch> listeSwitch = configSwitchMetier.getListSwitch();
+		model.addAttribute("listeSwitch", listeSwitch);
+		
 		return "index";
 	}
 
@@ -84,7 +86,15 @@ public class ConfigSwitchController{
 	@RequestMapping(value="/configurerSwitch", method=RequestMethod.POST)
 	public String configurerSwitch(Model model, String adresseSwitch, 
 									@RequestParam("selectTypeInterface") String[] typeInterface)  {
+		int i = 1 ;
+		
 		for (String s : typeInterface) {
+			String[] traitementString = s.split("\\.");
+			String vlanIdType = traitementString[0];
+			String ifIndexString = traitementString[1];
+			
+			int vlanId = configSwitchMetier.getVlanId(vlanIdType);
+			configSwitchMetier.setVlanConfiguration(adresseSwitch, Integer.valueOf(ifIndexString), vlanId);
 			
 		}
 		return "redirect:/consulterSwitch?adresseSwitch="+adresseSwitch;

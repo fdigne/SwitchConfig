@@ -14,6 +14,7 @@ import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.Address;
 import org.snmp4j.smi.GenericAddress;
+import org.snmp4j.smi.Integer32;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.Variable;
@@ -122,7 +123,15 @@ public class SNMPManager implements Runnable {
 		return tableUtils.getTable(getTarget(), new OID[]{ query },null,null);
 	}
 	
-
+	public ResponseEvent set(OID query, Variable var) throws Exception {
+		PDU pdu = new PDU();
+		pdu.setType(PDU.SET);
+		pdu.add(new VariableBinding(query,var));
+		//pdu.setRequestID(pdu.setRequestID(new Integer32(1));
+		ResponseEvent event = snmp.set(pdu, getTarget());
+		return event;
+		
+	}
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub

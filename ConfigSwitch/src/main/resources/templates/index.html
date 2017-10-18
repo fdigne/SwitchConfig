@@ -35,7 +35,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="panel panel-primary" th:if="${switche}">
+			<div class="panel panel-primary">
 				<div class="panel-heading">Switches disponibles sur le réseau</div>
 				<div class="panel-body">
 					<table class="table table-striped">
@@ -65,15 +65,17 @@
 								<th>Status</th>
 							</tr>
 							<tr th:each="o:${listInterfaces}">
+							
 								<td th:text="${o.nomInterface}"></td>
+								
 								<td><select name="selectTypeInterface">
-										<option th:value="Eclairage" th:text="Eclairage"
+										<option th:value="${'Eclairage.' + o.ifIndex}" th:text="Eclairage"
 											th:selected="(${o.typeInterface} == 'Eclairage')" />
-										<option th:value="Son" th:text="Son"
+										<option th:value="${'Son.' + o.ifIndex}" th:text="Son"
 											th:selected="(${o.typeInterface} == 'Son')" />
-										<option th:value="Vidéo" th:text="Vidéo"
+										<option th:value="${'Video.' + o.ifIndex}" th:text="Vidéo"
 											th:selected="(${o.typeInterface} == 'Video')" />
-										<option th:value="Défaut" th:text="Défaut"
+										<option th:value="${'Defaut.' + o.ifIndex}" th:text="Défaut"
 											th:selected="(${o.typeInterface} == 'Defaut')" />
 
 								</select></td>
@@ -81,8 +83,6 @@
 									class="text-success"></label> <label
 									th:if="!${o.statusInterface}" th:text="Down"
 									class="text-danger"></label></td>
-
-
 							</tr>
 						</table>
 
