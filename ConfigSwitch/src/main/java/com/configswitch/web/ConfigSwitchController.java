@@ -1,12 +1,17 @@
 package com.configswitch.web;
 
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.snmp4j.PDU;
+import org.snmp4j.smi.TcpAddress;
+import org.snmp4j.smi.TransportIpAddress;
+import org.snmp4j.smi.UdpAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 
 import com.configswitch.entities.InterfaceSwitch;
 import com.configswitch.entities.Switch;
+import com.configswitch.entities.Trap;
 import com.configswitch.metier.IConfigSwitchMetier;
+import com.configswitch.snmp.TrapReceiver;
 
 @Controller
 public class ConfigSwitchController{
@@ -30,11 +37,21 @@ public class ConfigSwitchController{
 	private IConfigSwitchMetier configSwitchMetier ;
 	
 	
+	private TrapReceiver trapReceiver ;	
+	
 
 	@RequestMapping("/index")
-	public String index(Model model) throws UnknownHostException {
+	public String index(Model model, Trap trap) throws UnknownHostException {
 		Collection<Switch> listeSwitch = configSwitchMetier.getListSwitch();
 		model.addAttribute("listeSwitch", listeSwitch);
+		trapReceiver = new TrapReceiver();
+		
+		try {
+			trapReceiver.listen(new UdpAddress("10.0.0.1/1800"));
+		} catch (IOException e) {
+			 System.err.println("Error in Listening for Trap");
+		      System.err.println("Exception Message = " + e.getMessage());
+		}
 		
 		return "index";
 	}
