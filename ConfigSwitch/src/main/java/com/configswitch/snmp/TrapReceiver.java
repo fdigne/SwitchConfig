@@ -2,6 +2,7 @@ package com.configswitch.snmp;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.concurrent.Callable;
 
 import org.snmp4j.CommandResponder;
 import org.snmp4j.CommandResponderEvent;
@@ -18,6 +19,7 @@ import org.snmp4j.mp.StateReference;
 import org.snmp4j.mp.StatusInformation;
 import org.snmp4j.security.Priv3DES;
 import org.snmp4j.security.SecurityProtocols;
+import org.snmp4j.smi.Address;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.TcpAddress;
 import org.snmp4j.smi.TransportIpAddress;
@@ -28,20 +30,32 @@ import org.snmp4j.transport.DefaultTcpTransportMapping;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.snmp4j.util.MultiThreadedMessageDispatcher;
 import org.snmp4j.util.ThreadPool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import com.configswitch.entities.Trap;
 import com.configswitch.web.ConfigSwitchController;
 
-
-public class TrapReceiver implements CommandResponder{
+@Component
+public class TrapReceiver implements CommandResponder {
 	
-	Snmp snmp;
 	
-	public TrapReceiver()
-	  {
+	public Trap pduReceived ;
+	
+	@Autowired
+	private ApplicationEventPublisher publisher;
+	
+	public TrapReceiver(ApplicationEventPublisher publisher) {
+        this.publisher = publisher;
+    }
+	public TrapReceiver() {
 		
-	  }
+	}
+	
 	
 	 /**
 	   * This method will listen for traps and response pdu's from SNMP agent.
@@ -79,14 +93,14 @@ public class TrapReceiver implements CommandResponder{
 	    transport.listen();
 	    System.out.println("Listening on " + address);
 
-	    try
+	   /* try
 	    {
 	      this.wait();
 	    }
 	    catch (InterruptedException ex)
 	    {
 	      Thread.currentThread().interrupt();
-	    }
+	    }*/
 	  }
 
 	  /**
@@ -96,6 +110,7 @@ public class TrapReceiver implements CommandResponder{
 	  {
 	    System.out.println("Received PDU...");
 	    PDU pdu = cmdRespEvent.getPDU();
+	    publisher.publishEvent(cmdRespEvent);
 	    if (pdu != null)
 	    {	
 	      System.out.println("Trap Type = " + pdu.getType());
@@ -124,4 +139,17 @@ public class TrapReceiver implements CommandResponder{
 	      }
 	    }
 	  }
+
+	/*@Override
+	public Object call() throws Exception {
+			try {
+				this.listen(new UdpAddress("10.0.0.1/1800"));
+			} catch (IOException e) {
+				 System.err.println("Error in Listening for Trap");
+			      System.err.println("Exception Message = " + e.getMessage());
+			}
+		return null;
+	}*/
+	
+	
 	}
