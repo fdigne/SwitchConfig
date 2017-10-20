@@ -5,6 +5,28 @@
 <head>
 <meta charset="UTF-8" />
 <title>Config'Switch</title>
+<script>
+if(typeof(EventSource) !== "undefined") {
+	   console.log("Event source available");
+	   var source = new EventSource('/trapAlarm');
+	   var message= "";
+	   var nouveauMessage="";
+
+	  
+	  source.addEventListener('message', function(e) {
+	        console.log(e.data);
+	       if(e.data == nouveauMessage) {
+		       }
+	       else {
+				message += e.data + "<br/>" ;
+				nouveauMessage = e.data;
+				document.getElementById("alarmTrap").innerHTML += e.data + "<br/>" ;
+		       } 
+	   }); 
+	} else {
+	        console.log("No SSE available");
+	}
+</script>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -50,8 +72,10 @@
 			</div>
 			<div class="panel panel-primary">
 				<div class="panel-heading">Alarmes réseau</div>
-				<div class="panel-body">
-					<label class="text-danger"  th:text="${trapReceived}" />
+				<div  class="panel-body">
+				<div class="text-danger" id="alarmTrap"></div>
+
+
 				</div>
 			</div>
 		</div>
@@ -71,11 +95,12 @@
 								<th>Status</th>
 							</tr>
 							<tr th:each="o:${listInterfaces}">
-							
+
 								<td th:text="${o.nomInterface}"></td>
-								
+
 								<td><select name="selectTypeInterface">
-										<option th:value="${'Eclairage.' + o.ifIndex}" th:text="Eclairage"
+										<option th:value="${'Eclairage.' + o.ifIndex}"
+											th:text="Eclairage"
 											th:selected="(${o.typeInterface} == 'Eclairage')" />
 										<option th:value="${'Son.' + o.ifIndex}" th:text="Son"
 											th:selected="(${o.typeInterface} == 'Son')" />

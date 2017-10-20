@@ -2,6 +2,7 @@ package com.configswitch.snmp;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.time.LocalDateTime;
 import java.util.concurrent.Callable;
 
 import org.snmp4j.CommandResponder;
@@ -33,11 +34,15 @@ import org.snmp4j.util.ThreadPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.configswitch.entities.Trap;
+import com.configswitch.entities.TrapInformation;
 import com.configswitch.web.ConfigSwitchController;
 
 @Component
@@ -46,15 +51,33 @@ public class TrapReceiver implements CommandResponder {
 	
 	public Trap pduReceived ;
 	
+	public String message ;
+	
 	@Autowired
 	private ApplicationEventPublisher publisher;
 	
 	public TrapReceiver(ApplicationEventPublisher publisher) {
         this.publisher = publisher;
     }
+	
+	private final SseEmitter emitter = new SseEmitter();
+	
 	public TrapReceiver() {
 		
 	}
+	
+	public SseEmitter getInfiniteMessages() {
+        return emitter;
+    }
+	
+	@Scheduled(fixedRate = 1000)
+    void timerHandler() {
+        try {
+            emitter.send(new TrapInformation(message), MediaType.APPLICATION_JSON);
+        } catch (Exception e) {
+            emitter.completeWithError(e);
+        }
+    }
 	
 	
 	 /**
@@ -110,6 +133,10 @@ public class TrapReceiver implements CommandResponder {
 	  {
 	    System.out.println("Received PDU...");
 	    PDU pdu = cmdRespEvent.getPDU();
+	    String[] sourceAddress = cmdRespEvent.getPeerAddress().toString().split("\\/");
+		String[] traitementPDUInterfaceName = pdu.getVariableBindings().get(3).toString().split("=");
+		message =LocalDateTime.now()+" : "+traitementPDUInterfaceName[1]+" down from "+sourceAddress[0];
+	    
 	    publisher.publishEvent(cmdRespEvent);
 	    if (pdu != null)
 	    {	

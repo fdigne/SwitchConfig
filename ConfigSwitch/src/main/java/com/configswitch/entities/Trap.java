@@ -15,6 +15,17 @@ public class Trap implements Serializable{
 	public Trap() {
 		super();
 	}
+	
+	
+
+	public Trap(String message, String sourceAdress, String interfaceName) {
+		super();
+		this.message = message;
+		this.sourceAdress = sourceAdress;
+		this.interfaceName = interfaceName;
+	}
+
+
 
 	public Trap(PDU pdu) {
 		super();

@@ -2,36 +2,57 @@ package com.configswitch.web;
 
 
 import java.io.IOException;
+import java.lang.annotation.Retention;
 import java.net.InetAddress;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.snmp4j.CommandResponderEvent;
 import org.snmp4j.PDU;
 import org.snmp4j.smi.UdpAddress;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder;
 
 import com.configswitch.entities.InterfaceSwitch;
 import com.configswitch.entities.Switch;
 import com.configswitch.entities.Trap;
+import com.configswitch.entities.TrapInformation;
 import com.configswitch.metier.IConfigSwitchMetier;
 import com.configswitch.snmp.TrapReceiver;
 
 @Controller
 @Component
-@EnableAsync
 public class ConfigSwitchController  {
 
 	//public static final String IP_ADDRESS_PATTERN = "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}";
@@ -44,18 +65,24 @@ public class ConfigSwitchController  {
 	@Autowired
 	private TrapReceiver trapReceiver = new TrapReceiver();
 	
+	
+	 
+	public ApplicationEventPublisher eventPublisher;
+	
+	private final CopyOnWriteArrayList<SseEmitter> emitters = new CopyOnWriteArrayList<>();
+	
 	private Trap trap = new Trap();
 	private Model model ;
+	private String message = "" ;
 	
 	
-	@RequestMapping("/index")
+	@RequestMapping("index")
 	public String index(Model model, Trap trap) {
 		this.model = model ;
 		Collection<Switch> listeSwitch = configSwitchMetier.getListSwitch();
 		model.addAttribute("listeSwitch", listeSwitch);
 		this.startTrapReceiver();
 		model.addAttribute("trapReceived", this.trap.getMessage());
-		
 		return "index";
 	}
 
@@ -117,7 +144,7 @@ public class ConfigSwitchController  {
 		
 	}
 
-	@RequestMapping(value="/configurerSwitch", method=RequestMethod.POST)
+	@RequestMapping(value="configurerSwitch", method=RequestMethod.POST)
 	public String configurerSwitch(Model model, String adresseSwitch, 
 									@RequestParam("selectTypeInterface") String[] typeInterface)  {
 		
@@ -133,25 +160,38 @@ public class ConfigSwitchController  {
 		return "redirect:/consulterSwitch?adresseSwitch="+adresseSwitch;
 	}
 	
-	@Async 
+	 
 	@EventListener
-	public String trapReceived(CommandResponderEvent cmdRespEvent) {
+	public void trapReceived(CommandResponderEvent cmdRespEvent) {
 		
 		PDU pdu = cmdRespEvent.getPDU();
 		String[] sourceAddress = cmdRespEvent.getPeerAddress().toString().split("\\/");
 		this.trap.setSourceAdress(sourceAddress[0]);
 		String[] traitementPDUInterfaceName = pdu.getVariableBindings().get(3).toString().split("=");
 		this.trap.setInterfaceName(traitementPDUInterfaceName[1]);
-		String message =LocalDateTime.now()+" : "+traitementPDUInterfaceName[1]+" down from "+sourceAddress[0];
-		this.trap.setMessage(message);
-		this.updateView(this.model, message);
-		return message;
+		message =LocalDateTime.now()+" : "+traitementPDUInterfaceName[1]+" down from "+sourceAddress[0];
+		
 	}
 
-	@RequestMapping("/redirect")
-	private String updateView(Model model, @ModelAttribute("trapReceived") String message) {
-		return "redirect:/index";
-	}
-
-
+	@GetMapping("/trapAlarm")
+	public @ResponseBody String sendMessage(HttpServletResponse response) {
+		response.setContentType("text/event-stream");
+		SseEmitter emitter = new SseEmitter();	    
+	    SseEventBuilder builder = SseEmitter.event()
+                .data(message)
+                .id("1")
+                .name("trapReceived")  
+                .reconnectTime(10_000L);
+try {
+	emitter.send(builder, MediaType.APPLICATION_JSON);
+} catch (IOException e) {
+	e.printStackTrace();
+	
 }
+
+	    emitter.onCompletion(() -> this.emitters.remove(emitter));
+	    emitter.onTimeout(() -> this.emitters.remove(emitter));
+	   return "data:"+ message+"\n\n"; 
+	  }
+}
+
