@@ -6,22 +6,14 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-
-import org.snmp4j.PDU;
-import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.smi.Integer32;
 import org.snmp4j.smi.OID;
-import org.snmp4j.smi.UdpAddress;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.util.TableEvent;
 import org.springframework.stereotype.Service;
-
 import com.configswitch.entities.InterfaceSwitch;
 import com.configswitch.entities.Switch;
 import com.configswitch.snmp.SNMPManager;
-import com.configswitch.snmp.TrapReceiver;
 
 @Service
 public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
@@ -97,7 +89,8 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 
 	}
 
-	private boolean getStatusInterface(String statusInterfaceSnmp) {
+	@Override
+	public boolean getStatusInterface(String statusInterfaceSnmp) {
 		boolean statusInterface ;
 		if (statusInterfaceSnmp.equals("1")) {
 			statusInterface = true ;
@@ -108,7 +101,8 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 		return statusInterface;
 	}
 
-	private String getTypeInterface(String vlanId) {
+	@Override
+	public String getTypeInterface(String vlanId) {
 		String typeInterface;
 		if (vlanId.equals("10")) {
 			typeInterface = "Eclairage" ;
@@ -152,7 +146,6 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 		ArrayList<Switch> listeSwitch = new ArrayList<Switch>();
 		
 			try {
-				byte[] localAdress = InetAddress.getLocalHost().getAddress();
 				
 				// ATTENTION : A MODIFIER LA BOUCLE (METTRE i=1 EN CONDITION REELLE)
 				for (int i = 2 ; i<255 ; i++) {

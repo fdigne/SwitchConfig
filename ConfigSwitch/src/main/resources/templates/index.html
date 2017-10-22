@@ -27,6 +27,11 @@ if(typeof(EventSource) !== "undefined") {
 	        console.log("No SSE available");
 	}
 </script>
+<script>
+function flushAlarm() {
+	document.getElementById("alarmTrap").innerHTML = "";
+	}
+</script>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -71,11 +76,19 @@ if(typeof(EventSource) !== "undefined") {
 				</div>
 			</div>
 			<div class="panel panel-primary">
+
 				<div class="panel-heading">Alarmes réseau</div>
-				<div  class="panel-body">
-				<div class="text-danger" id="alarmTrap"></div>
-
-
+				<div class="panel-body">
+					<form th:action="@{/consulterSwitch}" id="configurerSwitch"
+						method="post">
+						<input type="hidden" name="adresseSwitch"
+							th:value="${adresseSwitch}" /> <input type="hidden"
+							name="switche" th:value="${switche}" />
+						<div class="text-danger" id="alarmTrap"></div>
+						<div></div>
+						<button type="submit" class="btn btn-primary"
+							onClick="flushAlarm()">Vider les alarmes</button>
+					</form>
 				</div>
 			</div>
 		</div>
