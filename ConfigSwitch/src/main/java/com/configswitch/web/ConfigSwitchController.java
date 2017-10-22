@@ -169,9 +169,12 @@ public class ConfigSwitchController  {
 		this.trap.setSourceAdress(sourceAddress[0]);
 		String[] traitementPDUInterfaceName = pdu.getVariableBindings().get(3).toString().split("=");
 		this.trap.setInterfaceName(traitementPDUInterfaceName[1]);
-		message =LocalDateTime.now()+" : "+traitementPDUInterfaceName[1]+" down from "+sourceAddress[0]+"\n";
-		
+		this.trap.setTypeTrap(pdu.getType());
+		String[] traitementPDUStatusInterface = pdu.getVariableBindings().get(5).toString().split("=");
+		message = LocalDateTime.now()+" : "+traitementPDUInterfaceName[1]+" "+traitementPDUStatusInterface[1]+" from "+sourceAddress[0]+"\n";		
+		this.trap.setMessage(message);
 	}
+
 
 	//Envoie du message à la page HTML
 	@GetMapping("/trapAlarm")

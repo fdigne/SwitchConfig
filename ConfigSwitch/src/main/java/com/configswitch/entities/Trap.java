@@ -10,6 +10,7 @@ public class Trap implements Serializable{
 	PDU pdu ;
 	String sourceAdress ;
 	String interfaceName ;
+	int typeTrap;
 	
 
 	public Trap() {
@@ -31,6 +32,20 @@ public class Trap implements Serializable{
 		super();
 		this.pdu = pdu;
 	}
+	
+	
+
+	public int getTypeTrap() {
+		return typeTrap;
+	}
+
+
+
+	public void setTypeTrap(int typeTrap) {
+		this.typeTrap = typeTrap;
+	}
+
+
 
 	public String getMessage() {
 		return message;
