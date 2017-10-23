@@ -30,7 +30,7 @@ if(typeof(EventSource) !== "undefined") {
 						nouveauDiv.className = "text-danger" ;
 						}
 		       
-		      	document.getElementById("alarmtrap").appendChild(nouveauDiv);
+		      	document.getElementById("alarmTrap").appendChild(nouveauDiv);
 		       
 		       } 
 	   }); 
@@ -40,7 +40,10 @@ if(typeof(EventSource) !== "undefined") {
 </script>
 <script>
 function flushAlarm() {
-	document.getElementById("alarmTrap").innerHTML = "";
+	var myNode = document.getElementById("alarmTrap");
+	while (myNode.firstChild) {
+	    myNode.removeChild(myNode.firstChild);
+	}
 	}
 </script>
 </head>
@@ -86,24 +89,19 @@ function flushAlarm() {
 					</table>
 				</div>
 			</div>
-			<div class="panel panel-primary">
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-primary" id="alarmTrapPanel">
 
 				<div class="panel-heading">Alarmes réseau</div>
 				<div class="panel-body">
-					<form th:action="@{/consulterSwitch}" id="configurerSwitch"
-						method="post">
-						<input type="hidden" name="adresseSwitch"
-							th:value="${adresseSwitch}" /> <input type="hidden"
-							name="switche" th:value="${switche}" />
-						<div id="alarmtrap"></div>
+						<div id="alarmTrap"></div>
 						<div></div>
-						<button type="submit" class="btn btn-primary"
-							onClick="flushAlarm()">Vider les alarmes</button>
-					</form>
+						<button  class="btn btn-primary"
+							onClick="flushAlarm()" style="float: right;">Vider les
+							alarmes</button>
 				</div>
 			</div>
-		</div>
-		<div class="col-md-6">
 			<div class="panel panel-primary" th:if="${switche}">
 				<div class="panel-heading">Configuration du switch</div>
 				<div class="panel-body">

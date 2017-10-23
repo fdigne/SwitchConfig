@@ -87,7 +87,7 @@ public class ConfigSwitchController  {
 		Collection<Switch> listeSwitch = configSwitchMetier.getListSwitch();
 		model.addAttribute("listeSwitch", listeSwitch);
 		this.startTrapReceiver();
-		model.addAttribute("trapReceived", this.trap.getMessage());
+		//model.addAttribute("trapReceived", this.trap.getMessage());
 		return "index";
 	}
 
@@ -115,7 +115,7 @@ public class ConfigSwitchController  {
 	@RequestMapping("/consulterSwitch")
 	public String consulterSwitch(Model model, String adresseSwitch) {
 		model.addAttribute("adresseSwitch", adresseSwitch);
-		model.addAttribute("trapReceived", this.trap.getMessage());
+		//model.addAttribute("trapReceived", this.trap.getMessage());
 		
 		
 		try {
@@ -202,7 +202,7 @@ public class ConfigSwitchController  {
 		this.trap.setTypeTrap(pdu.getType());
 		String[] traitementPDUStatusInterface = pdu.getVariableBindings().get(5).toString().split("=");
 		message = LocalDateTime.now()+" : "+traitementPDUInterfaceName[1]+" "+traitementPDUStatusInterface[1]+" from "+sourceAddress[0]+"\n";		
-		this.trap.setMessage(message);
+		//this.trap.setMessage(message);
 	}
 
 
@@ -228,16 +228,5 @@ try {
 }
 	   return "data:"+ message+"\n\n"; 
 	  }
-	
-	/** Vide les alarmes présente dans le champ Alarmes
-	 * 
-	 * @param model
-	 * @return
-	 */
-	@GetMapping("/flushAlarm") 
-	public String flushAlarm(Model model) {
-			this.message = "";
-		return "redirect:/index";
-	}
 }
 
