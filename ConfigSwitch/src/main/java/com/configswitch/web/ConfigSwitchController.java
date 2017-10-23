@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.net.InetAddress;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -67,6 +69,8 @@ public class ConfigSwitchController  {
 	@Autowired
 	private IConfigSwitchMetier configSwitchMetier ;
 	
+	private final CopyOnWriteArrayList<SseEmitter> emitters = new CopyOnWriteArrayList<>();
+	
 	
 	@Autowired
 	private TrapReceiver trapReceiver = new TrapReceiver();
@@ -115,7 +119,7 @@ public class ConfigSwitchController  {
 	@RequestMapping("/consulterSwitch")
 	public String consulterSwitch(Model model, String adresseSwitch) {
 		model.addAttribute("adresseSwitch", adresseSwitch);
-		//model.addAttribute("trapReceived", this.trap.getMessage());
+		this.startTrapReceiver();
 		
 		
 		try {
@@ -194,7 +198,31 @@ public class ConfigSwitchController  {
 	@EventListener
 	public void trapReceived(CommandResponderEvent cmdRespEvent) {
 		
+		List<SseEmitter> deadEmitters = new ArrayList<>();
 		PDU pdu = cmdRespEvent.getPDU();
+		String[] sourceAddress = cmdRespEvent.getPeerAddress().toString().split("\\/");
+		this.trap.setSourceAdress(sourceAddress[0]);
+		String[] traitementPDUInterfaceName = pdu.getVariableBindings().get(3).toString().split("=");
+		this.trap.setInterfaceName(traitementPDUInterfaceName[1].trim());
+		this.trap.setTypeTrap(pdu.getType());
+		String[] traitementPDUStatusInterface = pdu.getVariableBindings().get(5).toString().split("=");
+		message = LocalDateTime.now()+" : "+traitementPDUInterfaceName[1]+" "+traitementPDUStatusInterface[1]+" from "+sourceAddress[0]+"\n";		
+		this.trap.setMessage(message);
+		
+	    this.emitters.forEach(emitter -> {
+	      try {
+	        emitter.send(trap);
+	      }
+	      catch (Exception e) {
+	        deadEmitters.add(emitter);
+	      }
+	    });
+
+	    this.emitters.remove(deadEmitters);
+		
+		
+		
+		/*PDU pdu = cmdRespEvent.getPDU();
 		String[] sourceAddress = cmdRespEvent.getPeerAddress().toString().split("\\/");
 		this.trap.setSourceAdress(sourceAddress[0]);
 		String[] traitementPDUInterfaceName = pdu.getVariableBindings().get(3).toString().split("=");
@@ -202,7 +230,7 @@ public class ConfigSwitchController  {
 		this.trap.setTypeTrap(pdu.getType());
 		String[] traitementPDUStatusInterface = pdu.getVariableBindings().get(5).toString().split("=");
 		message = LocalDateTime.now()+" : "+traitementPDUInterfaceName[1]+" "+traitementPDUStatusInterface[1]+" from "+sourceAddress[0]+"\n";		
-		//this.trap.setMessage(message);
+		this.trap.setMessage(message);*/
 	}
 
 
@@ -212,11 +240,20 @@ public class ConfigSwitchController  {
 	 * @return
 	 */
 	@GetMapping("/trapAlarm")
-	public @ResponseBody String sendMessage(HttpServletResponse response) {
+	public SseEmitter sendMessage() {
+		
+		SseEmitter emitter = new SseEmitter();
+	    this.emitters.add(emitter);
+
+	    emitter.onCompletion(() -> this.emitters.remove(emitter));
+	    emitter.onTimeout(() -> this.emitters.remove(emitter));
+
+		
+		/*HttpServletResponse response
 		response.setContentType("text/event-stream");
 		SseEmitter emitter = new SseEmitter();	    
 	    SseEventBuilder builder = SseEmitter.event()
-                .data(message)
+                .data(this.trap)
                 .id("1")
                 .name("trapReceived")  
                 .reconnectTime(10_000L);
@@ -226,7 +263,8 @@ try {
 	e.printStackTrace();
 	
 }
-	   return "data:"+ message+"\n\n"; 
+	   return "data:"+ message+"\n\n"; */
+		return emitter;
 	  }
 }
 

@@ -9,31 +9,31 @@
 if(typeof(EventSource) !== "undefined") {
 	   console.log("Event source available");
 	   var source = new EventSource('/trapAlarm');
-	   var message= "";
-	   var nouveauMessage="";
 
-	  
-	  source.addEventListener('message', function(e) {
-	        console.log(e.data);
-	       if(e.data == nouveauMessage) {
-		       }
-	       else {
-		       nouveauMessage = e.data ;
-		       const nouveauDiv = document.createElement("div");
-		       const nouveauContenu = document.createTextNode(e.data);
+	   source.onmessage = e => {
+		    const msg = JSON.parse(e.data);	
+		    	console.log(msg.message);
+		    	console.log(msg.interfaceName);
+		    	
+		      const nouveauDiv = document.createElement("div");
+		      const nouveauContenu = document.createTextNode(msg.message);
 		       nouveauDiv.appendChild(nouveauContenu) //ajoute le contenu au div
 		       
-		       if (nouveauMessage.includes("up")){
+		       if (msg.message.includes("up")){
 					nouveauDiv.className = "text-success" ;
+					document.getElementById(msg.interfaceName).className = "";
 						}
 					else {
 						nouveauDiv.className = "text-danger" ;
+						document.getElementById(msg.interfaceName).className = "bg-danger";
+						
 						}
 		       
 		      	document.getElementById("alarmTrap").appendChild(nouveauDiv);
-		       
-		       } 
-	   }); 
+		    
+	   };
+
+	
 	} else {
 	        console.log("No SSE available");
 	}
@@ -89,19 +89,20 @@ function flushAlarm() {
 					</table>
 				</div>
 			</div>
-		</div>
-		<div class="col-md-6">
+			
 			<div class="panel panel-primary" id="alarmTrapPanel">
 
 				<div class="panel-heading">Alarmes réseau</div>
 				<div class="panel-body">
-						<div id="alarmTrap"></div>
-						<div></div>
-						<button  class="btn btn-primary"
-							onClick="flushAlarm()" style="float: right;">Vider les
-							alarmes</button>
+					<div id="alarmTrap"></div>
+					<div></div>
+					<button class="btn btn-primary" onClick="flushAlarm()"
+						style="float: right;">Vider les alarmes</button>
 				</div>
 			</div>
+		</div>
+		<div class="col-md-6">
+			
 			<div class="panel panel-primary" th:if="${switche}">
 				<div class="panel-heading">Configuration du switch</div>
 				<div class="panel-body">
@@ -116,7 +117,7 @@ function flushAlarm() {
 								<th>Type</th>
 								<th>Status</th>
 							</tr>
-							<tr th:each="o:${listInterfaces}">
+							<tr th:each="o:${listInterfaces}" th:id="${o.nomInterface}">
 
 								<td th:text="${o.nomInterface}"></td>
 
