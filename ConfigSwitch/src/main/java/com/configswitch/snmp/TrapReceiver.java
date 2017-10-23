@@ -116,14 +116,6 @@ public class TrapReceiver implements CommandResponder {
 	    transport.listen();
 	    System.out.println("Listening on " + address);
 
-	   /* try
-	    {
-	      this.wait();
-	    }
-	    catch (InterruptedException ex)
-	    {
-	      Thread.currentThread().interrupt();
-	    }*/
 	  }
 
 	  /**
@@ -165,18 +157,5 @@ public class TrapReceiver implements CommandResponder {
 	        }
 	      }
 	    }
-	  }
-
-	/*@Override
-	public Object call() throws Exception {
-			try {
-				this.listen(new UdpAddress("10.0.0.1/1800"));
-			} catch (IOException e) {
-				 System.err.println("Error in Listening for Trap");
-			      System.err.println("Exception Message = " + e.getMessage());
-			}
-		return null;
-	}*/
-	
-	
+	  }	
 	}

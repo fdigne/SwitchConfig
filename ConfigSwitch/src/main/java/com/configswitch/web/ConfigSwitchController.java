@@ -51,11 +51,17 @@ import com.configswitch.entities.TrapInformation;
 import com.configswitch.metier.IConfigSwitchMetier;
 import com.configswitch.snmp.TrapReceiver;
 
+
+/** Classe Controller de la page Web
+ * 
+ * @author Florian Digne
+ *
+ */
 @Controller
 @Component
 public class ConfigSwitchController  {
 
-	//Regex pour vérifier conformité adresse IP
+	
 	private static final Pattern PATTERN = Pattern.compile(
 	        "^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$");
 	@Autowired
@@ -70,8 +76,12 @@ public class ConfigSwitchController  {
 	//Message envoyé sur JSON lors de la réception de trap Cisco
 	private String message = "" ;
 	
-	
-	//Page d'accueil
+	/**Page d'accueil
+	 * 
+	 * @param model
+	 * @param trap
+	 * @return
+	 */
 	@RequestMapping("index")
 	public String index(Model model, Trap trap) {
 		Collection<Switch> listeSwitch = configSwitchMetier.getListSwitch();
@@ -81,7 +91,9 @@ public class ConfigSwitchController  {
 		return "index";
 	}
 
-	//Lancement du listener du port UDP 1800 pour la réception des trap Cisco.
+	/**Lancement du listener du port UDP 1800 pour la réception des trap Cisco.
+	 * 
+	 */
 	private void startTrapReceiver() {
 		 try
 		    {
@@ -94,7 +106,12 @@ public class ConfigSwitchController  {
 		    }
 	}
 
-	//Page de consultation des paramètres de Switch
+	/** Page de consultation des paramètres de Switch
+	 * 
+	 * @param model
+	 * @param adresseSwitch
+	 * @return
+	 */
 	@RequestMapping("/consulterSwitch")
 	public String consulterSwitch(Model model, String adresseSwitch) {
 		model.addAttribute("adresseSwitch", adresseSwitch);
@@ -129,7 +146,11 @@ public class ConfigSwitchController  {
 
 	}
 	
-	//Vérification champ adresse Ip du switch pour sa conformité
+	/**Vérification champ adresse Ip du switch pour sa conformité
+	 * 
+	 * @param adresseSwitch
+	 * @return
+	 */
 	private boolean traitementStyleIpAddresse(String adresseSwitch) {
 		Matcher matcher = PATTERN.matcher(adresseSwitch) ;
 		
@@ -142,7 +163,13 @@ public class ConfigSwitchController  {
 		
 	}
 
-	//Modifications des données du switch lors de l'envoie de la requête via Bouton "modifier"
+	/**Modifications des données du switch lors de l'envoie de la requête via Bouton "modifier"
+	 * 
+	 * @param model
+	 * @param adresseSwitch
+	 * @param typeInterface
+	 * @return
+	 */
 	@RequestMapping(value="configurerSwitch", method=RequestMethod.POST)
 	public String configurerSwitch(Model model, String adresseSwitch, 
 									@RequestParam("selectTypeInterface") String[] typeInterface)  {
@@ -160,7 +187,10 @@ public class ConfigSwitchController  {
 	}
 	
 	 
-	//Reception des données envoyées sur le port d'écoute des traps.
+	/** Reception des données envoyées sur le port d'écoute des traps.
+	 * 
+	 * @param cmdRespEvent
+	 */
 	@EventListener
 	public void trapReceived(CommandResponderEvent cmdRespEvent) {
 		
@@ -176,7 +206,11 @@ public class ConfigSwitchController  {
 	}
 
 
-	//Envoie du message à la page HTML
+	/** Envoie du message à la page HTML
+	 * 
+	 * @param response
+	 * @return
+	 */
 	@GetMapping("/trapAlarm")
 	public @ResponseBody String sendMessage(HttpServletResponse response) {
 		response.setContentType("text/event-stream");
@@ -195,7 +229,11 @@ try {
 	   return "data:"+ message+"\n\n"; 
 	  }
 	
-	//Vide les alarmes présente dans le champ Alarmes
+	/** Vide les alarmes présente dans le champ Alarmes
+	 * 
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/flushAlarm") 
 	public String flushAlarm(Model model) {
 			this.message = "";
