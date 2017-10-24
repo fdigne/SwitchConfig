@@ -22,3 +22,17 @@
   -o-animation:      invalid 1s infinite; /* Opera 12+ */
   animation:         invalid 1s infinite; /* IE 10+ */
 }
+
+.eclairage {
+	
+	background-color : #C5CEFF;
+}
+
+.video {
+	background-color : LightYellow;
+}
+
+.son {
+	background-color : MediumAquaMarine;
+}
+

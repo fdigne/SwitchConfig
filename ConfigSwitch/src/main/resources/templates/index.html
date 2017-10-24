@@ -46,6 +46,7 @@ function flushAlarm() {
 	}
 	}
 </script>
+
 </head>
 <body>
 	<div layout:fragment="content">
@@ -104,21 +105,20 @@ function flushAlarm() {
 		<div class="col-md-6">
 			
 			<div class="panel panel-primary" th:if="${switche}">
-				<div class="panel-heading">Configuration du switch</div>
+				<div class="panel-heading" th:text="${'Configuration du switch '+switche.nameSwitch}"></div>
 				<div class="panel-body">
 					<form th:action="@{/configurerSwitch}" id="configurerSwitch"
 						method="post">
 						<input type="hidden" name="adresseSwitch"
 							th:value="${adresseSwitch}" /> <input type="hidden"
 							name="switche" th:value="${switche}" />
-						<table class="table table-striped">
+						<table class="table table-striped" id="tableSwitch">
 							<tr>
 								<th>Interfaces</th>
 								<th>Type</th>
 								<th>Status</th>
 							</tr>
 							<tr th:each="o:${listInterfaces}" th:id="${o.nomInterface}">
-
 								<td th:text="${o.nomInterface}"></td>
 
 								<td><select name="selectTypeInterface">
@@ -138,6 +138,7 @@ function flushAlarm() {
 									th:if="!${o.statusInterface}" th:text="Down"
 									class="text-danger"></label></td>
 							</tr>
+							
 						</table>
 
 						<button type="submit" class="btn btn-primary">Modifier la
