@@ -2,54 +2,30 @@ package com.configswitch.web;
 
 
 import java.io.IOException;
-import java.lang.annotation.Retention;
 import java.net.InetAddress;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.snmp4j.CommandResponderEvent;
 import org.snmp4j.PDU;
 import org.snmp4j.smi.UdpAddress;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder;
-
 import com.configswitch.entities.InterfaceSwitch;
 import com.configswitch.entities.Switch;
 import com.configswitch.entities.Trap;
-import com.configswitch.entities.TrapInformation;
 import com.configswitch.metier.IConfigSwitchMetier;
 import com.configswitch.snmp.TrapReceiver;
 
@@ -77,7 +53,6 @@ public class ConfigSwitchController  {
 		
 	private Trap trap = new Trap();
 	
-	//Message envoyé sur JSON lors de la réception de trap Cisco
 	private String message = "" ;
 	
 	/**Page d'accueil
@@ -91,7 +66,6 @@ public class ConfigSwitchController  {
 		Collection<Switch> listeSwitch = configSwitchMetier.getListSwitch();
 		model.addAttribute("listeSwitch", listeSwitch);
 		this.startTrapReceiver();
-		//model.addAttribute("trapReceived", this.trap.getMessage());
 		return "index";
 	}
 
@@ -219,18 +193,6 @@ public class ConfigSwitchController  {
 	    });
 
 	    this.emitters.remove(deadEmitters);
-		
-		
-		
-		/*PDU pdu = cmdRespEvent.getPDU();
-		String[] sourceAddress = cmdRespEvent.getPeerAddress().toString().split("\\/");
-		this.trap.setSourceAdress(sourceAddress[0]);
-		String[] traitementPDUInterfaceName = pdu.getVariableBindings().get(3).toString().split("=");
-		this.trap.setInterfaceName(traitementPDUInterfaceName[1]);
-		this.trap.setTypeTrap(pdu.getType());
-		String[] traitementPDUStatusInterface = pdu.getVariableBindings().get(5).toString().split("=");
-		message = LocalDateTime.now()+" : "+traitementPDUInterfaceName[1]+" "+traitementPDUStatusInterface[1]+" from "+sourceAddress[0]+"\n";		
-		this.trap.setMessage(message);*/
 	}
 
 
@@ -248,22 +210,6 @@ public class ConfigSwitchController  {
 	    emitter.onCompletion(() -> this.emitters.remove(emitter));
 	    emitter.onTimeout(() -> this.emitters.remove(emitter));
 
-		
-		/*HttpServletResponse response
-		response.setContentType("text/event-stream");
-		SseEmitter emitter = new SseEmitter();	    
-	    SseEventBuilder builder = SseEmitter.event()
-                .data(this.trap)
-                .id("1")
-                .name("trapReceived")  
-                .reconnectTime(10_000L);
-try {
-	emitter.send(builder, MediaType.APPLICATION_JSON);
-} catch (IOException e) {
-	e.printStackTrace();
-	
-}
-	   return "data:"+ message+"\n\n"; */
 		return emitter;
 	  }
 }
