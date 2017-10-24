@@ -1,0 +1,24 @@
+@charset "UTF-8";
+
+@-webkit-keyframes invalid {
+  from { background-color: red; }
+  to { background-color: inherit; }
+}
+@-moz-keyframes invalid {
+  from { background-color: red; }
+  to { background-color: inherit; }
+}
+@-o-keyframes invalid {
+  from { background-color: red; }
+  to { background-color: inherit; }
+}
+@keyframes invalid {
+  from { background-color: red; }
+  to { background-color: inherit; }
+}
+.invalid {
+  -webkit-animation: invalid 1s infinite; /* Safari 4+ */
+  -moz-animation:    invalid 1s infinite; /* Fx 5+ */
+  -o-animation:      invalid 1s infinite; /* Opera 12+ */
+  animation:         invalid 1s infinite; /* IE 10+ */
+}
