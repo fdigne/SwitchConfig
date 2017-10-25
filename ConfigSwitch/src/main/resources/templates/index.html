@@ -9,7 +9,6 @@
 if(typeof(EventSource) !== "undefined") {
 	   console.log("Event source available");
 	   var source = new EventSource('/trapAlarm');
-
 	   source.onmessage = e => {
 		    const msg = JSON.parse(e.data);	
 		    	console.log(msg.message);
@@ -32,7 +31,6 @@ if(typeof(EventSource) !== "undefined") {
 		      	document.getElementById("alarmTrap").appendChild(nouveauDiv);
 		    
 	   };
-
 	
 	} else {
 	        console.log("No SSE available");
@@ -47,41 +45,12 @@ function flushAlarm() {
 	}
 </script>
 
+
 </head>
 <body>
 	<div layout:fragment="content">
-		<div class="col-md-6">
-			<div class="panel panel-primary">
-				<div class="panel-heading">Choix de l'utilisateur</div>
-				<div class="panel-body">
-					<form th:action="@{/consulterSwitch}" method="get">
-						<div>
-							<label>Adresse Switch : </label> <input type="text"
-								name="adresseSwitch" th:value="${adresseSwitch}"
-								placeholder="172.31.10.1" />
-							<button type="submit" class="btn btn-primary">Ok</button>
-						</div>
-					</form>
-					<div class="text-danger" th:if="${exception}"
-						th:text="${exception.message}"></div>
-				</div>
-			</div>
-			
-			<div class="panel panel-primary">
-				<div class="panel-heading">Switches disponibles sur le réseau</div>
-				<div class="panel-body">
-					<table class="table table-striped">
-						<tr th:each="o:${listeSwitch}">
-							<td><a
-								th:href="@{/consulterSwitch?adresseSwitch=}+${o.adressSwitchString}"
-								th:text="${o.nameSwitch}"></a></td>
-							<td th:text="${o.adressSwitchString}"></td>
-						</tr>
-					</table>
-				</div>
-			</div>
-			
-			<div class="panel panel-primary" id="alarmTrapPanel">
+<!-- 		<div class="col-md-6">
+ -->			<div class="panel panel-primary" id="alarmTrapPanel">
 
 				<div class="panel-heading">Alarmes réseau</div>
 				<div class="panel-body">
@@ -91,16 +60,15 @@ function flushAlarm() {
 						style="float: right;">Vider les alarmes</button>
 				</div>
 			</div>
-		</div>
-		<div class="col-md-6">
+	<!-- 	</div>
+		<div class="col-md-6"> -->
 			<div class="panel panel-primary" th:each="s:${listeSwitch}">
 				<div class="panel-heading" th:text="${'Configuration du switch '+s.nameSwitch}"></div>
 				<div class="panel-body">
 					<form th:action="@{/configurerSwitch}" id="configurerSwitch"
 						method="post">
 						<input type="hidden" name="adresseSwitch"
-							th:value="${s.adressSwitch}" /> <input type="hidden"
-							name="switche" th:value="${switche}" />
+							th:value="${s.adressSwitchString}" /> 
 						<table class="table table-striped" id="tableSwitch">
 							<tr>
 								<th>Interfaces</th>
@@ -138,7 +106,7 @@ function flushAlarm() {
 
 				</div>
 			</div>
-		</div>
-	</div>
+<!-- 		</div>
+ -->	</div>
 </body>
 </html>

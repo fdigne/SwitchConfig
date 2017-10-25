@@ -36,3 +36,6 @@
 	background-color : MediumAquaMarine;
 }
 
+tr { display: block; float: left; }
+th, td { display: block; }
+

@@ -66,7 +66,7 @@ public class ConfigSwitchController  {
 	 * @return
 	 */
 	@RequestMapping("index")
-	public String index(Model model, Trap trap) {
+	public String index(Model model) {
 		Collection<Switch> listeSwitch = configSwitchMetier.getListSwitch();
 		for (Switch s : listeSwitch) {
 			this.sourceSwitche.put(s.getAdressSwitchString(), s.getNameSwitch());
@@ -155,7 +155,7 @@ public class ConfigSwitchController  {
 	 * @param typeInterface
 	 * @return
 	 */
-	@RequestMapping(value="configurerSwitch", method=RequestMethod.POST)
+	@RequestMapping(value="/configurerSwitch", method=RequestMethod.POST)
 	public String configurerSwitch(Model model, String adresseSwitch, 
 									@RequestParam("selectTypeInterface") String[] typeInterface)  {
 		
@@ -168,7 +168,8 @@ public class ConfigSwitchController  {
 			configSwitchMetier.setVlanConfiguration(adresseSwitch, Integer.valueOf(ifIndexString), vlanId);
 			
 		}
-		return "redirect:/consulterSwitch?adresseSwitch="+adresseSwitch;
+		//return "redirect:/consulterSwitch?adresseSwitch="+adresseSwitch;
+		return "redirect:index";
 	}
 	
 	 
