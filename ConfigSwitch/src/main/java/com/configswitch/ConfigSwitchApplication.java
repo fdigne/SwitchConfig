@@ -1,16 +1,12 @@
 package com.configswitch;
 
-import java.awt.Desktop;
 import java.io.IOException;
-import java.net.URI;
-
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@EnableAutoConfiguration
 @SpringBootApplication
 public class ConfigSwitchApplication implements CommandLineRunner{
 	
@@ -31,7 +27,7 @@ public class ConfigSwitchApplication implements CommandLineRunner{
 		 
 	 }
 	}
-
+	
 	@Override
 	public void run(String... arg0) throws Exception {
 		

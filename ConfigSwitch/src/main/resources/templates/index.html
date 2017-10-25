@@ -66,17 +66,7 @@ function flushAlarm() {
 						th:text="${exception.message}"></div>
 				</div>
 			</div>
-			<div class="panel panel-primary" th:if="${switche}">
-				<div class="panel-heading">Informations sur le switch</div>
-				<div class="panel-body">
-					<div>
-						<label>Nom : </label> <label th:text="${switche.nameSwitch}"></label>
-					</div>
-					<div>
-						<label>Adresse Ip : </label> <label th:text="${adresseSwitch}"></label>
-					</div>
-				</div>
-			</div>
+			
 			<div class="panel panel-primary">
 				<div class="panel-heading">Switches disponibles sur le réseau</div>
 				<div class="panel-body">
