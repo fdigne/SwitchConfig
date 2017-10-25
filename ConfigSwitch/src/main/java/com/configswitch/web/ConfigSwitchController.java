@@ -3,9 +3,11 @@ package com.configswitch.web;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
@@ -47,6 +49,8 @@ public class ConfigSwitchController  {
 	
 	private final CopyOnWriteArrayList<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 	
+	private HashMap<String, String> sourceSwitche = new HashMap<String, String>();
+	
 	
 	@Autowired
 	private TrapReceiver trapReceiver = new TrapReceiver();
@@ -64,6 +68,9 @@ public class ConfigSwitchController  {
 	@RequestMapping("index")
 	public String index(Model model, Trap trap) {
 		Collection<Switch> listeSwitch = configSwitchMetier.getListSwitch();
+		for (Switch s : listeSwitch) {
+			this.sourceSwitche.put(s.getAdressSwitchString(), s.getNameSwitch());
+		}
 		model.addAttribute("listeSwitch", listeSwitch);
 		this.startTrapReceiver();
 		return "index";
@@ -108,7 +115,7 @@ public class ConfigSwitchController  {
 
 				Switch switche = configSwitchMetier.getSwitchInformations(InetAddress.getByName(adresseSwitch));
 				model.addAttribute("switche", switche);
-				Collection<InterfaceSwitch> listInterfaces = configSwitchMetier.getListInterfaces(InetAddress.getByName(adresseSwitch));
+				Collection<InterfaceSwitch> listInterfaces = configSwitchMetier.getListInterfaces(InetAddress.getByName(adresseSwitch).getHostName());
 				model.addAttribute("listInterfaces", listInterfaces);
 				
 				Collection<Switch> listeSwitch = configSwitchMetier.getListSwitch();
@@ -175,7 +182,11 @@ public class ConfigSwitchController  {
 		List<SseEmitter> deadEmitters = new ArrayList<>();
 		PDU pdu = cmdRespEvent.getPDU();
 		String[] sourceAddress = cmdRespEvent.getPeerAddress().toString().split("\\/");
-		this.trap.setSourceAdress(sourceAddress[0]);
+		//////////////////////////////////A ENLEVER EN CAS REEL 
+		
+		sourceAddress[0] = "172.31.10.254";
+		////////////////////////////////////////////
+		this.trap.setSourceSwitch(this.sourceSwitche.get(sourceAddress[0]));	
 		String[] traitementPDUInterfaceName = pdu.getVariableBindings().get(3).toString().split("=");
 		this.trap.setInterfaceName(traitementPDUInterfaceName[1].trim());
 		this.trap.setTypeTrap(pdu.getType());

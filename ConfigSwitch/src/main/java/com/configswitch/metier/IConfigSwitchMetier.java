@@ -28,7 +28,7 @@ public interface IConfigSwitchMetier {
 	 * @param adresseSwitch
 	 * @return Collection<InterfaceSwitch>
 	 */
-	public Collection<InterfaceSwitch> getListInterfaces(InetAddress adresseSwitch) ;
+	public Collection<InterfaceSwitch> getListInterfaces(String adresseSwitch) ;
 	
 	/** Permet d'obtenir la liste des switchs présents sur le réseau 172.31.10.0/24
 	 * 

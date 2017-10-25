@@ -14,6 +14,7 @@ if(typeof(EventSource) !== "undefined") {
 		    const msg = JSON.parse(e.data);	
 		    	console.log(msg.message);
 		    	console.log(msg.interfaceName);
+		    	console.log(msg.sourceSwitch);
 		    	
 		      const nouveauDiv = document.createElement("div");
 		      const nouveauContenu = document.createTextNode(msg.message);
@@ -21,12 +22,11 @@ if(typeof(EventSource) !== "undefined") {
 		       
 		       if (msg.message.includes("up")){
 					nouveauDiv.className = "text-success" ;
-					document.getElementById(msg.interfaceName).className = "";
+					document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).className = "";
 						}
 					else {
 						nouveauDiv.className = "text-danger" ;
-						//document.getElementById(msg.interfaceName).className = "bg-danger";
-						document.getElementById(msg.interfaceName).className = "invalid";
+						document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).className = "invalid";
 						}
 		       
 		      	document.getElementById("alarmTrap").appendChild(nouveauDiv);
@@ -93,14 +93,13 @@ function flushAlarm() {
 			</div>
 		</div>
 		<div class="col-md-6">
-			
-			<div class="panel panel-primary" th:if="${switche}">
-				<div class="panel-heading" th:text="${'Configuration du switch '+switche.nameSwitch}"></div>
+			<div class="panel panel-primary" th:each="s:${listeSwitch}">
+				<div class="panel-heading" th:text="${'Configuration du switch '+s.nameSwitch}"></div>
 				<div class="panel-body">
 					<form th:action="@{/configurerSwitch}" id="configurerSwitch"
 						method="post">
 						<input type="hidden" name="adresseSwitch"
-							th:value="${adresseSwitch}" /> <input type="hidden"
+							th:value="${s.adressSwitch}" /> <input type="hidden"
 							name="switche" th:value="${switche}" />
 						<table class="table table-striped" id="tableSwitch">
 							<tr>
@@ -108,7 +107,7 @@ function flushAlarm() {
 								<th>Type</th>
 								<th>Status</th>
 							</tr>
-							<tr th:each="o:${listInterfaces}" th:id="${o.nomInterface}">
+							<tr th:each="o:${s.listInterfaces}" th:id="${o.nomInterface + '.' +s.nameSwitch}">
 								<td th:text="${o.nomInterface}"></td>
 
 								<td><select name="selectTypeInterface">

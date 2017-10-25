@@ -37,6 +37,7 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 			String nomSwitch = client.getAsString(new OID(SWITCHNAME));
 			switche = new Switch(nomSwitch, adresseSwitch);
 			switche.setAdressSwitchString(adresseSwitch.getHostName());
+			switche.setListInterfaces(getListInterfaces(adresseSwitch.getHostName()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -53,7 +54,7 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 
 
 	@Override
-	public Collection<InterfaceSwitch> getListInterfaces(InetAddress adresseSwitch) {
+	public Collection<InterfaceSwitch> getListInterfaces(String adresseSwitch) {
 
 		SNMPManager client = new SNMPManager("udp:"+adresseSwitch.toString()+"/161");
 		ArrayList<InterfaceSwitch> liste = new ArrayList<InterfaceSwitch>();
@@ -152,7 +153,7 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 					//localAdress[3] = (byte) i ;
 					adresseTestee = InetAddress.getByName("172.31.10."+i);
 					try {
-						if (adresseTestee.isReachable(12)) {
+						if (adresseTestee.isReachable(15)) {
 							listeSwitch.add(getSwitchInformations(adresseTestee));
 						}
 					} catch (IOException e) {

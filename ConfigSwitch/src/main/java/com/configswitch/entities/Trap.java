@@ -11,6 +11,7 @@ public class Trap implements Serializable{
 	String sourceAdress ;
 	String interfaceName ;
 	int typeTrap;
+	String sourceSwitch ;
 	
 
 	public Trap() {
@@ -79,6 +80,18 @@ public class Trap implements Serializable{
 
 	public void setInterfaceName(String interfaceName) {
 		this.interfaceName = interfaceName;
+	}
+
+
+
+	public String getSourceSwitch() {
+		return sourceSwitch;
+	}
+
+
+
+	public void setSourceSwitch(String sourceSwitch) {
+		this.sourceSwitch = sourceSwitch;
 	}
 	
 	

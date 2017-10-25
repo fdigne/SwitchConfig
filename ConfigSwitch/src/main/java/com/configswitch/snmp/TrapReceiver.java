@@ -42,7 +42,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.configswitch.entities.Trap;
-import com.configswitch.entities.TrapInformation;
 import com.configswitch.web.ConfigSwitchController;
 
 @Component
@@ -68,15 +67,6 @@ public class TrapReceiver implements CommandResponder {
 	
 	public SseEmitter getInfiniteMessages() {
         return emitter;
-    }
-	
-	@Scheduled(fixedRate = 1000)
-    void timerHandler() {
-        try {
-            emitter.send(new TrapInformation(message), MediaType.APPLICATION_JSON);
-        } catch (Exception e) {
-            emitter.completeWithError(e);
-        }
     }
 	
 	
