@@ -16,7 +16,7 @@ if(typeof(EventSource) !== "undefined") {
 		      const nouveauContenu = document.createTextNode(msg.message);
 		       nouveauDiv.appendChild(nouveauContenu) //ajoute le contenu au div
 
-		       var mapClasse = new Map();
+		       var mapClassPrecedente = new Map();
 		       
 		       
 		       if (msg.message.includes("up")){
