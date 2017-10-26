@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import org.snmp4j.smi.Integer32;
 import org.snmp4j.smi.OID;
@@ -71,10 +72,13 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 					
 					
 					if(nomInterface.contains("Ethernet")) {
+						HashMap<String, String> nomTypeInterface = new HashMap<String, String>();
 						InterfaceSwitch interfaceSwitch = new InterfaceSwitch(nomInterface);
 						interfaceSwitch.setTypeInterface(typeInterface);
 						interfaceSwitch.setStatusInterface(statusInterface);
 						interfaceSwitch.setIfIndex(Integer.parseInt(ifIndex));
+						nomTypeInterface.put(nomInterface, typeInterface);
+						interfaceSwitch.setNomTypeinterface(nomTypeInterface);
 						liste.add(interfaceSwitch);
 					}
 					
@@ -106,17 +110,17 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 	public String getTypeInterface(String vlanId) {
 		String typeInterface;
 		if (vlanId.equals("10")) {
-			typeInterface = "Eclairage" ;
+			typeInterface = "eclairage" ;
 		}
 		else if(vlanId.equals("20")) {
-			typeInterface = "Son" ;
+			typeInterface = "son" ;
 
 		}
 		else if (vlanId.equals("30")){
-			typeInterface = "Video" ;
+			typeInterface = "video" ;
 		}
 		else {
-			typeInterface = "Defaut";
+			typeInterface = "defaut";
 		}
 
 		return typeInterface ;
@@ -125,13 +129,13 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 	@Override
 	public int getVlanId(String typeInterface) {
 		int vlanId;
-		if(typeInterface.equals("Eclairage")) {
+		if(typeInterface.equals("eclairage")) {
 			vlanId = 10;
 		}
-		else if(typeInterface.equals("Son")) {
+		else if(typeInterface.equals("son")) {
 			vlanId = 20;
 		}
-		else if(typeInterface.equals("Video")) {
+		else if(typeInterface.equals("video")) {
 			vlanId = 30;
 		}
 		else {

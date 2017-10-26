@@ -1,6 +1,7 @@
 package com.configswitch.entities;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 public class InterfaceSwitch implements Serializable {
 	
@@ -8,6 +9,7 @@ public class InterfaceSwitch implements Serializable {
 	private String typeInterface ;
 	private boolean statusInterface;
 	private int ifIndex ;
+	private HashMap<String, String> nomTypeinterface ;
 	
 	
 	public InterfaceSwitch() {
@@ -38,6 +40,16 @@ public class InterfaceSwitch implements Serializable {
 
 	public void setTypeInterface(String typeInterface) {
 		this.typeInterface = typeInterface;
+	}
+
+	
+	public HashMap<String, String> getNomTypeinterface() {
+		return nomTypeinterface;
+	}
+
+
+	public void setNomTypeinterface(HashMap<String, String> nomTypeinterface) {
+		this.nomTypeinterface = nomTypeinterface;
 	}
 
 

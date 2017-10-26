@@ -6,12 +6,13 @@ import org.snmp4j.PDU;
 
 public class Trap implements Serializable{
 	
-	String message ;
-	PDU pdu ;
-	String sourceAdress ;
-	String interfaceName ;
-	int typeTrap;
-	String sourceSwitch ;
+	private String message ;
+	private PDU pdu ;
+	private String sourceAdress ;
+	private String interfaceName ;
+	private int typeTrap;
+	private String sourceSwitch ;
+	private String typeInterface;
 	
 
 	public Trap() {
@@ -44,6 +45,18 @@ public class Trap implements Serializable{
 
 	public void setTypeTrap(int typeTrap) {
 		this.typeTrap = typeTrap;
+	}
+
+
+
+	public String getTypeInterface() {
+		return typeInterface;
+	}
+
+
+
+	public void setTypeInterface(String typeInterface) {
+		this.typeInterface = typeInterface;
 	}
 
 

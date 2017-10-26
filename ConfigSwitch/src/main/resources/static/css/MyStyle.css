@@ -1,30 +1,43 @@
 @charset "UTF-8";
 
 @-webkit-keyframes invalid {
-  from { background-color: red; }
-  to { background-color: inherit; }
+   from { background-color: red; }
+  to { background-color: transparent; } 
+  50% { background: red; }
+ 
 }
 @-moz-keyframes invalid {
-  from { background-color: red; }
-  to { background-color: inherit; }
+    from { background-color: red; }
+  to { background-color: transparent; } 
+  50% { background: red; }
 }
 @-o-keyframes invalid {
-  from { background-color: red; }
-  to { background-color: inherit; }
+   from { background-color: red; }
+  to { background-color: transparent; } 
 }
 @keyframes invalid {
-  from { background-color: red; }
-  to { background-color: inherit; }
-}
-.invalid {
-  -webkit-animation: invalid 1s infinite; /* Safari 4+ */
-  -moz-animation:    invalid 1s infinite; /* Fx 5+ */
-  -o-animation:      invalid 1s infinite; /* Opera 12+ */
-  animation:         invalid 1s infinite; /* IE 10+ */
+    from { background-color: red; }
+  to { background-color: transparent; } 
+  
+  
 }
 
-.eclairage {
-	
+.invalid {
+  -webkit-animation: invalid 1s infinite; Safari 4+
+  -moz-animation:    invalid 1s infinite; Fx 5+
+  -o-animation:      invalid 1s infinite; Opera 12+
+  animation:         invalid 1s infinite; IE 10+
+}
+
+
+.valid {
+   background-color: initial;
+}
+
+
+/* Coloriage du tableau suivant le type d'interface */
+
+.eclairage {	
 	background-color : #C5CEFF;
 }
 
@@ -35,6 +48,15 @@
 .son {
 	background-color : MediumAquaMarine;
 }
+
+.defaut {
+	background-color : #D3DAD2;
+}
+
+
+
+
+/* Inverse le tableau en lignes */
 
 tr { display: block; float: left; }
 th, td { display: block; }

@@ -5,38 +5,36 @@
 <head>
 <meta charset="UTF-8" />
 <title>Config'Switch</title>
-<script>
+<script type="text/javascript">
 if(typeof(EventSource) !== "undefined") {
 	   console.log("Event source available");
 	   var source = new EventSource('/trapAlarm');
 	   source.onmessage = e => {
 		    const msg = JSON.parse(e.data);	
-		    	console.log(msg.message);
-		    	console.log(msg.interfaceName);
-		    	console.log(msg.sourceSwitch);
 		    	
 		      const nouveauDiv = document.createElement("div");
 		      const nouveauContenu = document.createTextNode(msg.message);
 		       nouveauDiv.appendChild(nouveauContenu) //ajoute le contenu au div
+
+		       var mapClasse = new Map();
+		       
 		       
 		       if (msg.message.includes("up")){
 					nouveauDiv.className = "text-success" ;
-					document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).className = "";
-						}
+							document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).classList.toggle("invalid");
+							}
 					else {
 						nouveauDiv.className = "text-danger" ;
-						document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).className = "invalid";
-						}
+							document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).classList.toggle("invalid");
+							}
 		       
-		      	document.getElementById("alarmTrap").appendChild(nouveauDiv);
-		    
+		      	document.getElementById("alarmTrap").appendChild(nouveauDiv);   
 	   };
-	
-	} else {
+		   	} else {
 	        console.log("No SSE available");
 	}
 </script>
-<script>
+<script type="text/javascript">
 function flushAlarm() {
 	var myNode = document.getElementById("alarmTrap");
 	while (myNode.firstChild) {
@@ -49,64 +47,62 @@ function flushAlarm() {
 </head>
 <body>
 	<div layout:fragment="content">
-<!-- 		<div class="col-md-6">
- -->			<div class="panel panel-primary" id="alarmTrapPanel">
+		<div class="panel panel-primary" id="alarmTrapPanel">
 
-				<div class="panel-heading">Alarmes réseau</div>
-				<div class="panel-body">
-					<div id="alarmTrap"></div>
-					<div></div>
-					<button class="btn btn-primary" onClick="flushAlarm()"
-						style="float: right;">Vider les alarmes</button>
-				</div>
+			<div class="panel-heading">Alarmes réseau</div>
+			<div class="panel-body">
+				<div id="alarmTrap"></div>
+				<div></div>
+				<button class="btn btn-primary" onClick="flushAlarm()"
+					style="float: right;">Vider les alarmes</button>
 			</div>
-	<!-- 	</div>
-		<div class="col-md-6"> -->
-			<div class="panel panel-primary" th:each="s:${listeSwitch}">
-				<div class="panel-heading" th:text="${'Configuration du switch '+s.nameSwitch}"></div>
-				<div class="panel-body">
-					<form th:action="@{/configurerSwitch}" id="configurerSwitch"
-						method="post">
-						<input type="hidden" name="adresseSwitch"
-							th:value="${s.adressSwitchString}" /> 
-						<table class="table table-striped" id="tableSwitch">
-							<tr>
-								<th>Interfaces</th>
-								<th>Type</th>
-								<th>Status</th>
-							</tr>
-							<tr th:each="o:${s.listInterfaces}" th:id="${o.nomInterface + '.' +s.nameSwitch}">
-								<td th:text="${o.nomInterface}"></td>
+		</div>
 
-								<td><select name="selectTypeInterface">
-										<option th:value="${'Eclairage.' + o.ifIndex}"
-											th:text="Eclairage"
-											th:selected="(${o.typeInterface} == 'Eclairage')" />
-										<option th:value="${'Son.' + o.ifIndex}" th:text="Son"
-											th:selected="(${o.typeInterface} == 'Son')" />
-										<option th:value="${'Video.' + o.ifIndex}" th:text="Vidéo"
-											th:selected="(${o.typeInterface} == 'Video')" />
-										<option th:value="${'Defaut.' + o.ifIndex}" th:text="Défaut"
-											th:selected="(${o.typeInterface} == 'Defaut')" />
+		<div class="panel panel-primary" th:each="s:${listeSwitch}">
+			<div class="panel-heading"
+				th:text="${'Configuration du switch '+s.nameSwitch}"></div>
+			<div class="panel-body">
+				<form th:action="@{/configurerSwitch}" id="configurerSwitch"
+					method="post" action="">
+					<input type="hidden" name="adresseSwitch"
+						th:value="${s.adressSwitchString}" />
+					<table class="table table-bordered" id="tableSwitch">
+						<!-- <tr>
+							<th>Interfaces</th>
+							<th>Type</th>
+							<th>Status</th>
+						</tr> -->
+						<tr  th:class="${o.typeInterface}" th:each="o:${s.listInterfaces}"
+							th:id="${o.nomInterface + '.' +s.nameSwitch}">
+							<td th:text="${o.nomInterface}"></td>
 
-								</select></td>
-								<td><label th:if="${o.statusInterface}" th:text="Up"
-									class="text-success"></label> <label
-									th:if="!${o.statusInterface}" th:text="Down"
-									class="text-danger"></label></td>
-							</tr>
-							
-						</table>
+							<td><select name="selectTypeInterface">
+									<option th:value="${'eclairage.' + o.ifIndex}"
+										th:text="Eclairage"
+										th:selected="(${o.typeInterface} == 'eclairage')" />
+									<option th:value="${'son.' + o.ifIndex}" th:text="Son"
+										th:selected="(${o.typeInterface} == 'son')" />
+									<option th:value="${'video.' + o.ifIndex}" th:text="Vidéo"
+										th:selected="(${o.typeInterface} == 'video')" />
+									<option th:value="${'defaut.' + o.ifIndex}" th:text="Défaut"
+										th:selected="(${o.typeInterface} == 'defaut')" />
 
-						<button type="submit" class="btn btn-primary">Modifier la
-							configuration</button>
-						<div class="text-danger" th:if="${error}"
-							th:text="${error.message}"></div>
-					</form>
+							</select></td>
+							<!-- <td><label th:if="${o.statusInterface}" th:text="Up"
+								class="text-success"></label> <label
+								th:if="!${o.statusInterface}" th:text="Down" class="text-danger"></label></td> -->
+						</tr>
 
-				</div>
+					</table>
+
+					<button type="submit" class="btn btn-primary">Modifier la
+						configuration</button>
+					<div class="text-danger" th:if="${error}"
+						th:text="${error.message}"></div>
+				</form>
+
 			</div>
-<!-- 		</div>
- -->	</div>
+		</div>
+	</div>
 </body>
 </html>
