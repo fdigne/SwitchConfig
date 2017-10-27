@@ -9,6 +9,7 @@
 if(typeof(EventSource) !== "undefined") {
 	   console.log("Event source available");
 	   var source = new EventSource('/trapAlarm');
+	   var mapClassPrecedente = new Map();
 	   source.onmessage = e => {
 		    const msg = JSON.parse(e.data);	
 		    	
@@ -16,16 +17,20 @@ if(typeof(EventSource) !== "undefined") {
 		      const nouveauContenu = document.createTextNode(msg.message);
 		       nouveauDiv.appendChild(nouveauContenu) //ajoute le contenu au div
 
-		       var mapClassPrecedente = new Map();
+		       
 		       
 		       
 		       if (msg.message.includes("up")){
 					nouveauDiv.className = "text-success" ;
-							document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).classList.toggle("invalid");
+					if (mapClassPrecedente.get(msg.interfaceName+"."+msg.sourceSwitch) != null){
+						document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).className = mapClassPrecedente.get(msg.interfaceName+"."+msg.sourceSwitch);
+						}
 							}
 					else {
 						nouveauDiv.className = "text-danger" ;
-							document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).classList.toggle("invalid");
+						console.log(document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).className);
+						mapClassPrecedente.set(msg.interfaceName+"."+msg.sourceSwitch , document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).className);
+						document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).className = "invalid";
 							}
 		       
 		      	document.getElementById("alarmTrap").appendChild(nouveauDiv);   

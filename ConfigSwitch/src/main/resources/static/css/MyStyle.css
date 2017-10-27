@@ -1,23 +1,26 @@
 @charset "UTF-8";
 
 @-webkit-keyframes invalid {
-   from { background-color: red; }
-  to { background-color: transparent; } 
-  50% { background: red; }
+    /* from { background-color: red; }
+  to { background-color: inherit; }  */
+  50% { background-color : red; }
+  
  
 }
 @-moz-keyframes invalid {
-    from { background-color: red; }
-  to { background-color: transparent; } 
-  50% { background: red; }
+    /* from { background-color: red; }
+  to { background-color: inherit; }  */
+  50% { background-color : red; }
 }
 @-o-keyframes invalid {
-   from { background-color: red; }
-  to { background-color: transparent; } 
+    /* from { background-color: red; }
+  to { background-color: inherit; }  */
+  50% { background-color: red; }
 }
 @keyframes invalid {
-    from { background-color: red; }
-  to { background-color: transparent; } 
+     /* from { background-color: red; }
+  to { background-color: inherit; }  */
+  50% { background-color : red; }
   
   
 }
