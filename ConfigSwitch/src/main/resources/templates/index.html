@@ -28,7 +28,6 @@ if(typeof(EventSource) !== "undefined") {
 							}
 					else {
 						nouveauDiv.className = "text-danger" ;
-						console.log(document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).className);
 						mapClassPrecedente.set(msg.interfaceName+"."+msg.sourceSwitch , document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).className);
 						document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).className = "invalid";
 							}
