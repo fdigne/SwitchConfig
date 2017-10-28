@@ -1,27 +1,25 @@
 @charset "UTF-8";
 
-@-webkit-keyframes invalid {
-    /* from { background-color: red; }
-  to { background-color: inherit; }  */
-  50% { background-color : red; }
-  
+ @-webkit-keyframes invalid {
+    /* from { background-color: currentColor; }
+  to { background-color: red; } */
+  50% {background-color: red;}
  
 }
 @-moz-keyframes invalid {
-    /* from { background-color: red; }
-  to { background-color: inherit; }  */
-  50% { background-color : red; }
+   /* from { background-color: currentColor; }
+  to { background-color: red; } */
+  50% {background-color: red;}
 }
 @-o-keyframes invalid {
-    /* from { background-color: red; }
-  to { background-color: inherit; }  */
-  50% { background-color: red; }
+   /* from { background-color: currentColor; }
+  to { background-color: red; } */
+  50% {background-color: red;}
 }
 @keyframes invalid {
-     /* from { background-color: red; }
-  to { background-color: inherit; }  */
-  50% { background-color : red; }
-  
+    /* from { background-color: currentColor; }
+  to { background-color: red; } */
+  50% {background-color: red;}
   
 }
 
@@ -30,11 +28,6 @@
   -moz-animation:    invalid 1s infinite; Fx 5+
   -o-animation:      invalid 1s infinite; Opera 12+
   animation:         invalid 1s infinite; IE 10+
-}
-
-
-.valid {
-   background-color: initial;
 }
 
 
@@ -56,6 +49,11 @@
 	background-color : #D3DAD2;
 }
 
+
+.blackbody {
+	
+	background-color : black ;
+}
 
 
 
