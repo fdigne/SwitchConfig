@@ -91,7 +91,7 @@ public class ConfigSwitchController  {
 		      System.err.println("Exception Message = " + e.getMessage());
 		    }
 	}
-
+	
 	/** Page de consultation des paramètres de Switch
 	 * 
 	 * @param model

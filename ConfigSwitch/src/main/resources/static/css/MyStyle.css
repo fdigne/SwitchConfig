@@ -38,7 +38,7 @@
 }
 
 .video {
-	background-color : Cantaloup;
+	background-color : #FFD379;
 }
 
 .son {
@@ -61,4 +61,3 @@
 
 tr { display: block; float: left; }
 th, td { display: block; }
-
