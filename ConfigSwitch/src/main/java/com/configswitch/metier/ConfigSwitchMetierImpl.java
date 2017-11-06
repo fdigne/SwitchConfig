@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.snmp4j.smi.Integer32;
 import org.snmp4j.smi.OID;
+import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.util.TableEvent;
 import org.springframework.stereotype.Service;
@@ -181,6 +182,18 @@ public class ConfigSwitchMetierImpl implements IConfigSwitchMetier {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void setSwitchName(String adresseSwitch, String nameSwitch) {
+		SNMPManager client = new SNMPManager("udp:"+adresseSwitch.toString()+"/161");
+		try {
+			client.start();
+			client.set(new OID(SWITCHNAME), new OctetString(nameSwitch));	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	}

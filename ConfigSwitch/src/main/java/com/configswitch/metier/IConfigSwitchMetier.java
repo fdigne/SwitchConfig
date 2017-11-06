@@ -64,6 +64,13 @@ public interface IConfigSwitchMetier {
 	 * @return String
 	 */
 	public String getTypeInterface(String vlanId);
+	
+	/**
+	 * Modifie le nom du Switch
+	 * @param adresseSwitch
+	 * @param nameSwitch
+	 */
+	public void setSwitchName(String adresseSwitch, String nameSwitch);
 
 
 }

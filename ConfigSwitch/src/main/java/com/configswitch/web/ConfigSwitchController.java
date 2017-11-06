@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -172,6 +173,22 @@ public class ConfigSwitchController  {
 		return "redirect:index";
 	}
 	
+	
+	/**
+	 * Initialisation de la configuration du switch
+	 * @param model
+	 * @param adresseSwitch
+	 * @param nomSwitch
+	 * @return
+	 */
+	@PostMapping("/initialiserSwitch")
+	public String initialiserSwitch(Model model, String adresseSwitch, String nomSwitch) {
+		
+		
+		return "redirect:index";
+	}
+	
+	
 	 
 	/** Reception des données envoyées sur le port d'écoute des traps.
 	 * 
@@ -224,5 +241,14 @@ public class ConfigSwitchController  {
 
 		return emitter;
 	  }
+	
+	@PostMapping("/changeSwitchName")
+public String changeSwitchName(Model model, String adresseSwitch, String nameSwitch) {
+		configSwitchMetier.setSwitchName(adresseSwitch, nameSwitch.toUpperCase());
+		
+		return "redirect:index";
+	}
+	
+	
 }
 
