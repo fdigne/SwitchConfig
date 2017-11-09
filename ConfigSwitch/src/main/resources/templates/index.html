@@ -63,7 +63,7 @@ function flushAlarm() {
 <body class="blackbody">
 	<div layout:fragment="content">
 		<div class="panel panel-primary" th:each="s:${listeSwitch}">
-			<div class="panel-heading" align="center">
+			<div th:id="${s.nameSwitch}" class="panel-heading" align="center">
 				<form th:action="@{/changeSwitchName}" method="post">
 				<input type="hidden" name="adresseSwitch"
 						th:value="${s.adressSwitchString}" />

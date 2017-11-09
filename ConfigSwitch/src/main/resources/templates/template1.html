@@ -16,7 +16,7 @@
 	</div>
 
 <div id="listeSwitchHeader" class="blackbody" align="left" th:each="s:${listeSwitch}">
-<label  th:id="${s.nameSwitch+'Header'}" th:text="${s.nameSwitch}"></label>
+<a th:href="${'#'+s.nameSwitch}" style="color : inherit;"><label  th:id="${s.nameSwitch+'Header'}" th:text="${s.nameSwitch}"></label></a>
 </div>
 	<br/><br/>
 </header>
