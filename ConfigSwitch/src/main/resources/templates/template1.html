@@ -11,9 +11,13 @@
 <body>
 
 <header class = "blackbody">
-<div  align="center">
+<div  id="pictureDushow" align="center">
 	<img src="../pictures/dushw-21.png" align="middle" />
 	</div>
+
+<div id="listeSwitchHeader" class="blackbody" align="left" th:each="s:${listeSwitch}">
+<label  th:id="${s.nameSwitch+'Header'}" th:text="${s.nameSwitch}"></label>
+</div>
 	<br/><br/>
 </header>
 <section layout:fragment="content"></section>

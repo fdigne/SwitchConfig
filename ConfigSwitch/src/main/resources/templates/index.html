@@ -12,7 +12,7 @@ if(typeof(EventSource) !== "undefined") {
 	   var mapClassPrecedente = new Map();
 	   source.onmessage = e => {
 		    const msg = JSON.parse(e.data);	
-		    	
+		    	var listeKeys = "";
 		      const nouveauDiv = document.createElement("div");
 		      const nouveauContenu = document.createTextNode(msg.message);
 		       nouveauDiv.appendChild(nouveauContenu) //ajoute le contenu au div
@@ -21,6 +21,15 @@ if(typeof(EventSource) !== "undefined") {
 					nouveauDiv.className = "text-success" ;
 					if (mapClassPrecedente.get(msg.interfaceName+"."+msg.sourceSwitch) != null){
 						document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).className = mapClassPrecedente.get(msg.interfaceName+"."+msg.sourceSwitch);
+						mapClassPrecedente.delete(msg.interfaceName+"."+msg.sourceSwitch);
+						for (var key of mapClassPrecedente.keys()) {
+							  listeKeys += key+" ";
+							}
+						
+						if (! listeKeys.includes(msg.sourceSwitch)) {
+							document.getElementById(msg.sourceSwitch+"Header").style.color = "inherit" ;
+							document.getElementById(msg.sourceSwitch+"Header").style.fontSize = "inherit" ;
+							}
 						}
 							}
 					else {
@@ -29,11 +38,13 @@ if(typeof(EventSource) !== "undefined") {
 						if (mapClassPrecedente.get(msg.interfaceName+"."+msg.sourceSwitch) != "invalid") {
 							mapClassPrecedente.set(msg.interfaceName+"."+msg.sourceSwitch , document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).className);
 							document.getElementById(msg.interfaceName+"."+msg.sourceSwitch).classList.toggle("invalid");
-							
+							document.getElementById(msg.sourceSwitch+"Header").style.color = "red" ;
+							document.getElementById(msg.sourceSwitch+"Header").style.fontSize = "22px" ;						
 							}
 							}
-		       
-		      	document.getElementById("alarmTrap").appendChild(nouveauDiv);   
+				
+		      	document.getElementById("alarmTrap").appendChild(nouveauDiv); 
+		      	  
 	   };
 		   	} else {
 	        console.log("No SSE available");
@@ -48,11 +59,9 @@ function flushAlarm() {
 	}
 </script>
 
-
 </head>
 <body class="blackbody">
 	<div layout:fragment="content">
-		
 		<div class="panel panel-primary" th:each="s:${listeSwitch}">
 			<div class="panel-heading" align="center">
 				<form th:action="@{/changeSwitchName}" method="post">

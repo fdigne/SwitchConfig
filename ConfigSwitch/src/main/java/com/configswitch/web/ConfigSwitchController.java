@@ -20,11 +20,13 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import com.configswitch.entities.InterfaceSwitch;
 import com.configswitch.entities.Switch;
@@ -53,12 +55,16 @@ public class ConfigSwitchController  {
 	private HashMap<String, String> sourceSwitche = new HashMap<String, String>();
 	
 	
-	@Autowired
-	private TrapReceiver trapReceiver = new TrapReceiver();
-		
+	
 	private Trap trap = new Trap();
 	
 	private String message = "" ;
+	
+	@RequestMapping("/")
+	public String indexRacine(Model model) {
+	
+		return "redirect:index";
+	}
 	
 	/**Page d'accueil
 	 * 
@@ -73,80 +79,7 @@ public class ConfigSwitchController  {
 			this.sourceSwitche.put(s.getAdressSwitchString(), s.getNameSwitch());
 		}
 		model.addAttribute("listeSwitch", listeSwitch);
-		this.startTrapReceiver();
 		return "index";
-	}
-
-	/**Lancement du listener du port UDP 1800 pour la réception des trap Cisco.
-	 * 
-	 */
-	private void startTrapReceiver() {
-		 try
-		    {
-		      trapReceiver.listen(new UdpAddress("10.0.0.1/1800"));
-		    }
-		    catch (IOException e)
-		    {
-		      System.err.println("Error in Listening for Trap");
-		      System.err.println("Exception Message = " + e.getMessage());
-		    }
-	}
-	
-	/** Page de consultation des paramètres de Switch
-	 * 
-	 * @param model
-	 * @param adresseSwitch
-	 * @return
-	 */
-	@RequestMapping("/consulterSwitch")
-	public String consulterSwitch(Model model, String adresseSwitch) {
-		model.addAttribute("adresseSwitch", adresseSwitch);
-		this.startTrapReceiver();
-		
-		
-		try {
-			if(! traitementStyleIpAddresse(adresseSwitch)) {
-				throw new RuntimeException("Adresse Ip non valide") ;
-			}
-			boolean result = configSwitchMetier.isReachable(InetAddress.getByName(adresseSwitch));
-			if (! result) {
-				throw new RuntimeException("Switch injoignable") ;
-			}
-			else {
-
-				Switch switche = configSwitchMetier.getSwitchInformations(InetAddress.getByName(adresseSwitch));
-				model.addAttribute("switche", switche);
-				Collection<InterfaceSwitch> listInterfaces = configSwitchMetier.getListInterfaces(InetAddress.getByName(adresseSwitch).getHostName());
-				model.addAttribute("listInterfaces", listInterfaces);
-				
-				Collection<Switch> listeSwitch = configSwitchMetier.getListSwitch();
-				model.addAttribute("listeSwitch", listeSwitch);
-			}
-
-
-		} catch (Exception e) {
-
-			model.addAttribute("exception",e);
-		}
-		return "index";
-
-	}
-	
-	/**Vérification champ adresse Ip du switch pour sa conformité
-	 * 
-	 * @param adresseSwitch
-	 * @return
-	 */
-	private boolean traitementStyleIpAddresse(String adresseSwitch) {
-		Matcher matcher = PATTERN.matcher(adresseSwitch) ;
-		
-		if(matcher.find()) {
-			return true ;
-		}
-		else {
-			return false;
-		}
-		
 	}
 
 	/**Modifications des données du switch lors de l'envoie de la requête via Bouton "modifier"
@@ -169,7 +102,6 @@ public class ConfigSwitchController  {
 			configSwitchMetier.setVlanConfiguration(adresseSwitch, Integer.valueOf(ifIndexString), vlanId);
 			
 		}
-		//return "redirect:/consulterSwitch?adresseSwitch="+adresseSwitch;
 		return "redirect:index";
 	}
 	
@@ -242,8 +174,16 @@ public class ConfigSwitchController  {
 		return emitter;
 	  }
 	
+	/**
+	 * Modifie le nom du Switch 
+	 * 
+	 * @param model
+	 * @param adresseSwitch
+	 * @param nameSwitch
+	 * @return
+	 */
 	@PostMapping("/changeSwitchName")
-public String changeSwitchName(Model model, String adresseSwitch, String nameSwitch) {
+	public String changeSwitchName(Model model, String adresseSwitch, String nameSwitch) {
 		configSwitchMetier.setSwitchName(adresseSwitch, nameSwitch.toUpperCase());
 		
 		return "redirect:index";

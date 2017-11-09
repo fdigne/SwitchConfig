@@ -1,24 +1,20 @@
 @charset "UTF-8";
 
  @-webkit-keyframes invalid {
-    /* from { background-color: currentColor; }
-  to { background-color: red; } */
+   
   50% {background-color: red;}
  
 }
 @-moz-keyframes invalid {
-   /* from { background-color: currentColor; }
-  to { background-color: red; } */
+   
   50% {background-color: red;}
 }
 @-o-keyframes invalid {
-   /* from { background-color: currentColor; }
-  to { background-color: red; } */
+  
   50% {background-color: red;}
 }
 @keyframes invalid {
-    /* from { background-color: currentColor; }
-  to { background-color: red; } */
+  
   50% {background-color: red;}
   
 }
@@ -61,3 +57,12 @@
 
 tr { display: block; float: left; }
 th, td { display: block; }
+
+/* Mise en page du header */
+
+#listeSwitchHeader {display:inline-block;
+					margin-right:10px;
+					margin-left:10px;}
+
+}
+
